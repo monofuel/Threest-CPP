@@ -18,6 +18,12 @@ void words() {
 	}
 }
 
+void dup() {
+	int var = peek();
+	push(var);
+
+}
+
 void add() {
 	int var1 = pop();
 	int var2 = pop();
@@ -44,6 +50,11 @@ void divide() {
 
 void init_builtin() {
 	word tmp;
+
+	tmp.command = "DUP";
+	tmp.builtin = true;
+	tmp.word_func = &dup;
+	add_word(tmp);
 
 	tmp.command = "/";
 	tmp.builtin = true;

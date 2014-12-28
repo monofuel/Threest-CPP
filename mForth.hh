@@ -22,9 +22,11 @@ typedef struct {
 } word;
 
 vector<int> stack;
+vector<bool> if_stack;
 vector<word> dictionary;
 bool building_word = false;
 word tmp_word;
+
 
 void push(int);
 int pop();

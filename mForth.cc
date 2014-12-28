@@ -27,19 +27,38 @@ void add_word(word item) {
 }
 void run_word(string command) {
 
-
+	
 	if (command.length() >= 1 && isdigit(command[0])) {
 		push(stoi(command, (size_t *)NULL,10));
 		return;
 	} else {
+		if (command.compare("IF") == 0) {
+			if_stack.push_back(pop());
+			return;
+		} else if (command.compare("THEN") == 0) {
+			if_stack.pop_back();	
+			return;
+		} else if (command.compare("ELSE") == 0) {
+			//invert latest if statement
+			//if true else false then
+			//if false else true then
+			if_stack.back() = !if_stack.back();
+			return;
+		}
 		for (word element : dictionary) {
 			if (command.compare(element.command) == 0) {
 				if (element.builtin) {
 					//execute function
-					element.word_func();
+					if (if_stack.size() == 0) {
+						element.word_func();
+					} else if (if_stack.back()) {
+						element.word_func();
+					}
 				} else {
 					//execute sub-words
-					for (string sub_word : *element.words) run_word(sub_word);
+					for (string sub_word : *element.words) {
+						run_word(sub_word);
+					}
 				}
 				return;
 			}
