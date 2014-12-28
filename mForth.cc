@@ -36,7 +36,8 @@ void run_word(string command) {
 	}else if (is_comment) return;
 	
 	if (command.length() >= 1 && isdigit(command[0])) {
-		push(stoi(command, (size_t *)NULL,10));
+		if (if_stack.size() == 0 || if_stack.back())
+			push(stoi(command, (size_t *)NULL,10));
 		return;
 	} else {
 		if (command.compare("IF") == 0) {

@@ -70,6 +70,8 @@ void divide() {
 	push(var2 / var1);
 }
 
+
+
 void init_builtin() {
 	word tmp;
 
