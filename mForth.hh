@@ -24,7 +24,7 @@ typedef struct {
 vector<int> stack;
 vector<word> dictionary;
 bool building_word = false;
-vector<string> building_words;
+word tmp_word;
 
 void push(int);
 int pop();

@@ -26,16 +26,23 @@ void add_word(word item) {
 	dictionary.push_back(item);
 }
 void run_word(string command) {
-	for (word element : dictionary) {
-		if (command.compare(element.command) == 0) {
-			if (element.builtin) {
-				//execute function
-				element.word_func();
-			} else {
-				//execute sub-words
-				for (string sub_word : *element.words) run_word(sub_word);
+
+
+	if (command.length() >= 1 && isdigit(command[0])) {
+		push(stoi(command, (size_t *)NULL,10));
+		return;
+	} else {
+		for (word element : dictionary) {
+			if (command.compare(element.command) == 0) {
+				if (element.builtin) {
+					//execute function
+					element.word_func();
+				} else {
+					//execute sub-words
+					for (string sub_word : *element.words) run_word(sub_word);
+				}
+				return;
 			}
-			return;
 		}
 	}
 	//if word isn't found
@@ -52,19 +59,21 @@ void parse_line(string input) {
 	do {
 		if (strcmp(element,":") == 0) {
 			building_word = true;
-			continue;
+			tmp_word.words = (vector<string> *) calloc(1,sizeof(vector<string>));
+
+			tmp_word.command = strtok(NULL," ");
+			element = strtok(NULL," ");
+			
 		}
 		if (building_word) {
 			if (strcmp(element,";") == 0) {
+				building_word = false;
+				add_word(tmp_word);
 				break;
 			}
-			building_words.push_back(element);
+			tmp_word.words->push_back(element);
 		} else {
-			if (input.length() >= 1 && isdigit(element[0])) {
-				push(stoi(element, (size_t *)NULL,10));
-			} else {
-				run_word(element);
-			}
+			run_word(element);
 		}
 	} while ((element = strtok(NULL," ")) != NULL);
 }
