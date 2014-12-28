@@ -27,6 +27,13 @@ void add_word(word item) {
 }
 void run_word(string command) {
 
+	if (!is_comment && command.compare("(") == 0) {
+		is_comment = true;
+		return;
+	}else if (is_comment && command.compare(")") == 0) {
+		is_comment = false;
+		return;
+	}else if (is_comment) return;
 	
 	if (command.length() >= 1 && isdigit(command[0])) {
 		push(stoi(command, (size_t *)NULL,10));
