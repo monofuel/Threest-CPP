@@ -34,28 +34,28 @@ int peek() {
 void add_word(word item) {
 	dictionary.push_back(item);
 }
-void run_word(string command) {
+void run_word(const char * command) {
 
-	if (!is_comment && command.compare("(") == 0) {
+	if (!is_comment && strcmp(command,"(") == 0) {
 		is_comment = true;
 		return;
-	}else if (is_comment && command.compare(")") == 0) {
+	}else if (is_comment && strcmp(command,")") == 0) {
 		is_comment = false;
 		return;
 	}else if (is_comment) return;
 	
-	if (command.length() >= 1 && isdigit(command[0])) {
+	if (strlen(command) >= 1 && isdigit(command[0])) {
 		if (if_stack.size() == 0 || if_stack.back())
-			push(stoi(command, (size_t *)NULL,10));
+			push(atoi(command));
 		return;
 	} else {
-		if (command.compare("IF") == 0) {
+		if (strcmp(command,"IF") == 0) {
 			if_stack.push_back(pop());
 			return;
-		} else if (command.compare("THEN") == 0) {
+		} else if (strcmp(command,"THEN") == 0) {
 			if_stack.pop_back();	
 			return;
-		} else if (command.compare("ELSE") == 0) {
+		} else if (strcmp(command,"ELSE") == 0) {
 			//invert latest if statement
 			//if true else false then
 			//if false else true then
@@ -63,7 +63,7 @@ void run_word(string command) {
 			return;
 		}
 		for (word element : dictionary) {
-			if (command.compare(element.command) == 0) {
+			if (strcmp(command,element.command) == 0) {
 				if (element.builtin) {
 					//execute function
 					if (if_stack.size() == 0) {
@@ -73,7 +73,7 @@ void run_word(string command) {
 					}
 				} else {
 					//execute sub-words
-					for (string sub_word : *element.words) {
+					for (const char * sub_word : *element.words) {
 						run_word(sub_word);
 					}
 				}
@@ -89,14 +89,13 @@ void run_word(string command) {
 //building_word is a bool to help with
 //multi-line word definitions
 
-void parse_line(string input) {
-	char * input_array = const_cast<char*>(input.c_str());
-	char * element = strtok(input_array," ");
+void parse_line(char * input) {
+	char * element = strtok(input," ");
 	if (element == NULL) return;
 	do {
 		if (strcmp(element,":") == 0) {
 			building_word = true;
-			tmp_word.words = (vector<string> *) calloc(1,sizeof(vector<string>));
+			tmp_word.words = (vector<const char *> *) calloc(1,sizeof(vector<char *>));
 
 			tmp_word.command = strtok(NULL," ");
 			element = strtok(NULL," ");
@@ -114,16 +113,19 @@ void parse_line(string input) {
 		}
 	} while ((element = strtok(NULL," ")) != NULL);
 }
-
+#ifndef __AVR_ARCH__
 int main(int argc, char * argv[]) {
 
 	init_builtin();
 
 	while (true) {
-		string input;
-
-		getline(cin,input);
+		char * input =(char *)  NULL;
+		size_t size = 0;
+		getline(&input,&size,stdin);
+		//destroy newline
+		strtok(input,"\n");
 		parse_line(input);
 		cout << " OK." << endl;
 	}
 }
+#endif
