@@ -24,7 +24,7 @@ void loop() {
   int i = 0;
   while (true) {
     while (Serial.available() == 0) {
-      //parse_line("LOOP");
+      parse_line("LOOP");
     }
     tmp = Serial.read();
     if (tmp == '\r') break;

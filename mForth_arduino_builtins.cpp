@@ -17,7 +17,7 @@ void set_pin_high() {
 }
 
 void set_pin_low() {
-  digitalWrite(pop(),HIGH); 
+  digitalWrite(pop(),LOW); 
 }
 
 void init_ardu_builtin() {
