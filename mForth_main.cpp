@@ -1,4 +1,4 @@
-#include "mForth.hh"
+#include "mForth.h"
 
 vector<int> stack;
 vector<bool> if_stack;

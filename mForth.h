@@ -1,11 +1,14 @@
 #ifndef MFORTH_H
 #define MFORTH_H
 
+#ifndef  __AVR_ARCH__ 
 #include <iostream>
 #include <vector>
 #include <string>
 #include <cstring>
 #include <cassert>
+#endif
+
 
 using namespace std;
 

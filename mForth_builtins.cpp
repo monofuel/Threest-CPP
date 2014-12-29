@@ -1,4 +1,4 @@
-#include "mForth.hh"
+#include "mForth.h"
 
 void display_1() {
 	cout << pop() << " ";
