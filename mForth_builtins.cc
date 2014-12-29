@@ -13,7 +13,7 @@ void cr() {
 }
 
 void words() {
-	for (word element : dictionary) {
+	for (word element : get_dictionary()) {
 		cout << element.command << " ";
 	}
 }
