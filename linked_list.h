@@ -1,3 +1,10 @@
+#ifdef __AVR_ARCH__
+//suck it
+#ifndef NULL
+#define NULL null
+#endif
+#endif
+
 #ifndef  LINKEDLIST_H
 #define  LINKEDLIST_H
 

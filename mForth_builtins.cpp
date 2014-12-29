@@ -1,7 +1,12 @@
 #include "mForth.h"
 
 void display_1() {
+	#ifdef  __AVR_ARCH__
+	Serial.print(pop());
+	Serial.print(" ");
+	#else
 	cout << pop() << " ";
+	#endif
 }
 
 void bye() {
@@ -9,13 +14,22 @@ void bye() {
 }
 
 void cr() {
+	#ifdef __AVR_ARCH__
+	Serial.println();
+	#else
 	cout << endl;
+	#endif
 }
 
 void words() {
-	node<word> * element = get_dictionary().get_top();
+	node<_word> * element = get_dictionary().get_top();
 	while (element != NULL) {
+		#ifdef __AVR_ARCH__
+		Serial.print(element->data.command);
+		Serial.print(" ");
+		#else
 		cout << element->data.command << " ";
+		#endif
 		element = element->next;
 	}
 }
@@ -76,70 +90,70 @@ void divide() {
 
 
 void init_builtin() {
-	word tmp;
+	_word tmp;
 
 	tmp.command = "DUP";
 	tmp.builtin = true;
-	tmp.word_func = &dup;
+	tmp._word_func = &dup;
 	add_word(tmp);
 
 	tmp.command = "<";
 	tmp.builtin = true;
-	tmp.word_func = &less_than;
+	tmp._word_func = &less_than;
 	add_word(tmp);
 
 	tmp.command = ">";
 	tmp.builtin = true;
-	tmp.word_func = &greater_than;
+	tmp._word_func = &greater_than;
 	add_word(tmp);
 
 	tmp.command = "==";
 	tmp.builtin = true;
-	tmp.word_func = &is_equal;
+	tmp._word_func = &is_equal;
 	add_word(tmp);
 
 	tmp.command = "/";
 	tmp.builtin = true;
-	tmp.word_func = &divide;
+	tmp._word_func = &divide;
 	add_word(tmp);
 
 	tmp.command = "*";
 	tmp.builtin = true;
-	tmp.word_func = &multiply;
+	tmp._word_func = &multiply;
 	add_word(tmp);
 
 	tmp.command = "-";
 	tmp.builtin = true;
-	tmp.word_func = &sub;
+	tmp._word_func = &sub;
 	add_word(tmp);
 
 	tmp.command = "+";
 	tmp.builtin = true;
-	tmp.word_func = &add;
+	tmp._word_func = &add;
 	add_word(tmp);
 
 	tmp.command = ".";
 	tmp.builtin = true;
-	tmp.word_func = &display_1;
+	tmp._word_func = &display_1;
 	add_word(tmp);
 
 	tmp.command = "DROP";
 	tmp.builtin = true;
-	tmp.word_func = &drop;
+	tmp._word_func = &drop;
 	add_word(tmp);
 
 	tmp.command = "CR";
 	tmp.builtin = true;
-	tmp.word_func = &cr;
+	tmp._word_func = &cr;
 	add_word(tmp);
 
 	tmp.command = "WORDS";
 	tmp.builtin = true;
-	tmp.word_func = &words;
+	tmp._word_func = &words;
 	add_word(tmp);
 
 	tmp.command = "BYE";
 	tmp.builtin = true;
-	tmp.word_func = &bye;
-	add_word(tmp);	
+	tmp._word_func = &bye;
+	add_word(tmp);
 }

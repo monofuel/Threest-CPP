@@ -2,12 +2,12 @@
 
 linked_list<int> stack;
 linked_list<bool> if_stack;
-linked_list<word> dictionary;
+linked_list<_word> dictionary;
 bool is_comment = false;
-bool building_word = false;
-word tmp_word;
+bool building__word = false;
+_word tmp__word;
 
-linked_list<word> get_dictionary() {
+linked_list<_word> get_dictionary() {
 	return dictionary;
 }
 
@@ -19,7 +19,11 @@ int pop() {
 	int value;
 	if (stack.size() == 0) {
 		//error case
+		#ifdef  __AVR_ARCH__
+		Serial.println("stack underflow");
+		#else
 		cout << "stack underflow" << endl;
+		#endif
 		return 0;
 	} else {
 		value = stack.get_top()->data;
@@ -32,10 +36,12 @@ int peek() {
 	return stack.get_top()->data;
 }
 
-void add_word(word item) {
+void add_word(_word item) {//check if exists
+	node<_word> * current = get_dictionary().get_top();
+	while (current != NULL) {
 	dictionary.push(item);
 }
-void run_word(const char * command) {
+void run__word(const char * command) {
 	if (!is_comment && strcmp(command,"(") == 0) {
 		is_comment = true;
 		return;
@@ -62,23 +68,23 @@ void run_word(const char * command) {
 			if_stack.get_top()->data = !if_stack.get_top()->data;
 			return;
 		}
-		node<word> * current = get_dictionary().get_top();
+		node<_word> * current = get_dictionary().get_top();
 		while (current != NULL) {
-			word element = current->data;
+			_word element = current->data;
 			if (strcmp(command,element.command) == 0) {
 				if (element.builtin) {
 					//execute function
 					if (if_stack.size() == 0) {
-						element.word_func();
+						element._word_func();
 					} else if (if_stack.get_top()) {
-						element.word_func();
+						element._word_func();
 					}
 				} else {
 					//execute sub-words
-					node <const char *> * current_word = element.words->get_top();
-					while (current_word != NULL) {
-						run_word(current_word->data);
-						current_word = current_word->next;
+					node <const char *> * current__word = element.words->get_top();
+					while (current__word != NULL) {
+						run__word(current__word->data);
+						current__word = current__word->next;
 					}
 				}
 				return;
@@ -86,38 +92,43 @@ void run_word(const char * command) {
 			current = current->next;
 		}
 	}
-	//if word isn't found
-	cout << "Word not found: " << command << " ";
+	//if _word isn't found
+	#ifdef  __AVR_ARCH__
+	Serial.print("_word not found: ");
+	Serial.println(command);
+	#else
+	cout << "_word not found: " << command << " ";
+	#endif
 
 }
 
-//building_word is a bool to help with
-//multi-line word definitions
+//building__word is a bool to help with
+//multi-line _word definitions
 
 void parse_line(char * input) {
 	char * element = strtok(input," ");
 	if (element == NULL) return;
 	do {
 		if (strcmp(element,":") == 0) {
-			building_word = true;
-			tmp_word.words = new linked_list<const char *>();
+			building__word = true;
+			tmp__word.words = new linked_list<const char *>();
 			char * tmp_command = strtok(NULL," ");
 			char * buffer = (char *) calloc(strlen(tmp_command)+1,sizeof(char));
 			strcpy(buffer,tmp_command);
-			tmp_word.command = buffer;
+			tmp__word.command = buffer;
 			element = strtok(NULL," ");
 		}
-		if (building_word) {
+		if (building__word) {
 			if (strcmp(element,";") == 0) {
-				building_word = false;
-				add_word(tmp_word);
+				building__word = false;
+				add_word(tmp__word);
 				break;
 			}
 			char * buffer = (char *) calloc(strlen(element)+1,sizeof(char));
 			strcpy(buffer,element);
-			tmp_word.words->append(buffer);
+			tmp__word.words->append(buffer);
 		} else {
-			run_word(element);
+			run__word(element);
 		}
 	} while ((element = strtok(NULL," ")) != NULL);
 }
