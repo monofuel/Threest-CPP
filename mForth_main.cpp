@@ -36,7 +36,6 @@ void add_word(word item) {
 	dictionary.push(item);
 }
 void run_word(const char * command) {
-
 	if (!is_comment && strcmp(command,"(") == 0) {
 		is_comment = true;
 		return;
@@ -79,6 +78,7 @@ void run_word(const char * command) {
 					node <const char *> * current_word = element.words->get_top();
 					while (current_word != NULL) {
 						run_word(current_word->data);
+						current_word = current_word->next;
 					}
 				}
 				return;
@@ -100,11 +100,12 @@ void parse_line(char * input) {
 	do {
 		if (strcmp(element,":") == 0) {
 			building_word = true;
-			tmp_word.words = (linked_list<const char *> *) calloc(1,sizeof(linked_list<char *>));
-
-			tmp_word.command = strtok(NULL," ");
+			tmp_word.words = new linked_list<const char *>();
+			char * tmp_command = strtok(NULL," ");
+			char * buffer = (char *) calloc(strlen(tmp_command)+1,sizeof(char));
+			strcpy(buffer,tmp_command);
+			tmp_word.command = buffer;
 			element = strtok(NULL," ");
-			
 		}
 		if (building_word) {
 			if (strcmp(element,";") == 0) {
@@ -112,7 +113,9 @@ void parse_line(char * input) {
 				add_word(tmp_word);
 				break;
 			}
-			tmp_word.words->push(element);
+			char * buffer = (char *) calloc(strlen(element)+1,sizeof(char));
+			strcpy(buffer,element);
+			tmp_word.words->append(buffer);
 		} else {
 			run_word(element);
 		}

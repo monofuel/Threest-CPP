@@ -25,7 +25,8 @@ void drop() {
 }
 
 void dup() {
-	int var = peek();
+	int var = pop();
+	push(var);
 	push(var);
 
 }
