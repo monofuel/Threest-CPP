@@ -83,6 +83,7 @@ void run_word(string command) {
 void parse_line(string input) {
 	char * input_array = const_cast<char*>(input.c_str());
 	char * element = strtok(input_array," ");
+	if (element == NULL) return;
 	do {
 		if (strcmp(element,":") == 0) {
 			building_word = true;
