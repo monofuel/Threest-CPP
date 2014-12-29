@@ -1,18 +1,18 @@
 #include "mForth.h"
 
-vector<int> stack;
-vector<bool> if_stack;
-vector<word> dictionary;
+linked_list<int> stack;
+linked_list<bool> if_stack;
+linked_list<word> dictionary;
 bool is_comment = false;
 bool building_word = false;
 word tmp_word;
 
-vector<word> get_dictionary() {
+linked_list<word> get_dictionary() {
 	return dictionary;
 }
 
 void push(int var) {
-	stack.push_back(var);
+	stack.push(var);
 }
 
 int pop() {
@@ -22,17 +22,18 @@ int pop() {
 		cout << "stack underflow" << endl;
 		return 0;
 	} else {
-		value = stack.back();
-		stack.pop_back();
+		value = stack.get_top()->data;
+		stack.pop();
 	}
 	return value;
 }
 
 int peek() {
-	return stack.back();
+	return stack.get_top()->data;
 }
+
 void add_word(word item) {
-	dictionary.push_back(item);
+	dictionary.push(item);
 }
 void run_word(const char * command) {
 
@@ -45,40 +46,44 @@ void run_word(const char * command) {
 	}else if (is_comment) return;
 	
 	if (strlen(command) >= 1 && isdigit(command[0])) {
-		if (if_stack.size() == 0 || if_stack.back())
+		if (if_stack.size() == 0 || if_stack.get_top()->data)
 			push(atoi(command));
 		return;
 	} else {
 		if (strcmp(command,"IF") == 0) {
-			if_stack.push_back(pop());
+			if_stack.push(pop());
 			return;
 		} else if (strcmp(command,"THEN") == 0) {
-			if_stack.pop_back();	
+			if_stack.pop();	
 			return;
 		} else if (strcmp(command,"ELSE") == 0) {
 			//invert latest if statement
 			//if true else false then
 			//if false else true then
-			if_stack.back() = !if_stack.back();
+			if_stack.get_top()->data = !if_stack.get_top()->data;
 			return;
 		}
-		for (word element : dictionary) {
+		node<word> * current = get_dictionary().get_top();
+		while (current != NULL) {
+			word element = current->data;
 			if (strcmp(command,element.command) == 0) {
 				if (element.builtin) {
 					//execute function
 					if (if_stack.size() == 0) {
 						element.word_func();
-					} else if (if_stack.back()) {
+					} else if (if_stack.get_top()) {
 						element.word_func();
 					}
 				} else {
 					//execute sub-words
-					for (const char * sub_word : *element.words) {
-						run_word(sub_word);
+					node <const char *> * current_word = element.words->get_top();
+					while (current_word != NULL) {
+						run_word(current_word->data);
 					}
 				}
 				return;
 			}
+			current = current->next;
 		}
 	}
 	//if word isn't found
@@ -95,7 +100,7 @@ void parse_line(char * input) {
 	do {
 		if (strcmp(element,":") == 0) {
 			building_word = true;
-			tmp_word.words = (vector<const char *> *) calloc(1,sizeof(vector<char *>));
+			tmp_word.words = (linked_list<const char *> *) calloc(1,sizeof(linked_list<char *>));
 
 			tmp_word.command = strtok(NULL," ");
 			element = strtok(NULL," ");
@@ -107,7 +112,7 @@ void parse_line(char * input) {
 				add_word(tmp_word);
 				break;
 			}
-			tmp_word.words->push_back(element);
+			tmp_word.words->push(element);
 		} else {
 			run_word(element);
 		}
@@ -126,6 +131,7 @@ int main(int argc, char * argv[]) {
 		strtok(input,"\n");
 		parse_line(input);
 		cout << " OK." << endl;
+		free(input);
 	}
 }
 #endif

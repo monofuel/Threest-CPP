@@ -3,8 +3,9 @@
 
 #ifndef  __AVR_ARCH__ 
 #include <iostream>
-#include <vector>
 #endif
+
+#include "linked_list.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -19,12 +20,12 @@ typedef struct {
 	bool builtin;
 	union {
 	void (*word_func)(void);
-	vector<const char *>* words;
+	linked_list<const char *>* words;
 	};
 
 } word;
 
-vector<word> get_dictionary();
+linked_list<word> get_dictionary();
 void push(int);
 int pop();
 int peek();

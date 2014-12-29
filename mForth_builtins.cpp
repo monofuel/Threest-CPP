@@ -13,8 +13,10 @@ void cr() {
 }
 
 void words() {
-	for (word element : get_dictionary()) {
-		cout << element.command << " ";
+	node<word> * element = get_dictionary().get_top();
+	while (element != NULL) {
+		cout << element->data.command << " ";
+		element = element->next;
 	}
 }
 
