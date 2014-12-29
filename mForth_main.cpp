@@ -36,9 +36,24 @@ int peek() {
 	return stack.get_top()->data;
 }
 
-void add_word(_word item) {//check if exists
+void add_word(_word item) {
+	//check if exists
 	node<_word> * current = get_dictionary().get_top();
 	while (current != NULL) {
+		if (strcmp(current->data.command,item.command) == 0) {
+			if (current->data.builtin) {
+				#ifdef __AVR_ARCH__
+				Serial.println("cannot redefine built-in words");
+				#else
+				cout << "cannot redefine built-in words" << endl;
+				#endif
+				return;
+			}
+			free(current->data.words);
+			current->data = item;
+		}
+		current = current->next;
+	}
 	dictionary.push(item);
 }
 void run__word(const char * command) {
