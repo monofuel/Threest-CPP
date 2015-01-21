@@ -1,0 +1,20 @@
+#not using std containers because we can't us them on the arduino
+impliment hashmap and vectors
+
+impliment the interpreter as a class so you can have multiple
+have 2 dictionaries, a 'global' dictionary and a 'local' dictionary.
+local dictionary words should have some sort of prefix.
+
+switch to smart pointers for clean defining/undefining words
+
+replace array of char * in a word struct with pointer to other words for traditional forth-like words and word chaining
+allow words to enumerate other types like
+string literals
+ints and floats
+arrays
+flow control statements
+	flow control statements can contain extra data, for example
+	an if statement can contain a pointer to else and done
+	and immediately jump to it
+
+add forth memory types like maps, vectors linked lists and other stacks.
