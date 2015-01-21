@@ -18,3 +18,5 @@ flow control statements
 	and immediately jump to it
 
 add forth memory types like maps, vectors linked lists and other stacks.
+
+add word syntax for multithreading
