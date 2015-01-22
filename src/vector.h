@@ -21,6 +21,7 @@ public:
 	vector();
 	
 	virtual void push(T);
+	virtual void clear();
 	virtual int size();
 	virtual T operator[](int);
 };
@@ -48,10 +49,16 @@ int vector<T>::size() {
 }
 
 template<typename T>
+void vector<T>::clear() {
+	free(array);
+	_size = 0;
+}
+
+template<typename T>
 T vector<T>::operator[](int index) {
 	if (array == NULL || index >= _size) return NULL;
 	
-	return *array[index];
+	return array[index];
 
 }
 

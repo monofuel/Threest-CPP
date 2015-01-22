@@ -1,4 +1,4 @@
-mForth: mForth_main.cpp mForth.h mForth_builtins.cpp linked_list.h
-	g++ -g -pedantic -std=c++11 -o mForth mForth_main.cpp mForth_builtins.cpp
+Threest: src/threest_main.cpp src/threest.h src/threest_builtins.cpp src/linked_list.h
+	g++ -g -pedantic -std=c++11 -o bin/threest src/threest_main.cpp src/threest_builtins.cpp
 clean:
-	rm mForth
+	rm bin/threest
