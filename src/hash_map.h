@@ -13,7 +13,7 @@ class hash_map {
 
 
 
-}
+};
 
 
 #endif

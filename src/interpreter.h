@@ -1,5 +1,7 @@
 #include "threest.h"
 
+#ifndef INTERPRETER_H
+#define INTERPRETER_H
 
 class interpreter {
 
@@ -78,7 +80,7 @@ void interpreter::add_word(_word item) {
 					errors_queue.append("cannot redefine built-in words");
 					return;
 				}
-				free(current->data.words);
+				free(current->data.crates);
 				current->data = item;
 			}
 			current = current->next;
@@ -93,7 +95,7 @@ void interpreter::add_word(_word item) {
 					errors_queue.append("cannot redefine built-in words");
 					return;
 				}
-				free(current->data.words);
+				free(current->data.crates);
 				current->data = item;
 			}
 			current = current->next;
@@ -103,6 +105,7 @@ void interpreter::add_word(_word item) {
 }
 
 void interpreter::run_word(const char * command) {
+	//TODO
 	//STUB
 	add_output("stub");
 
@@ -129,3 +132,6 @@ void interpreter::parse_line(char * input) {
 		run_word(current_line[current_word]);
 	}
 }
+
+
+#endif

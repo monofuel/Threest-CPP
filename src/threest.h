@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstddef>
 #include <cstdlib>
+#include <cstdio>
 #endif
 
 #ifdef __AVR_ARCH__
@@ -24,6 +25,8 @@
 
 using namespace std;
 
+typedef struct crate crate;
+
 //_words can either be builtin
 //or made up of other _words.
 typedef struct {
@@ -31,7 +34,7 @@ typedef struct {
 	bool builtin;
 	union {
 	void (*_word_func)(void);
-	linked_list<const char *>* words;
+	linked_list<crate>* crates;
 	};
 
 } _word;
@@ -63,7 +66,7 @@ typedef struct {
 //ints, arrays, objects and other non-instructions are pushed
 //onto the stack.
 enum crate_type { WORD,IF,ELSE,DO,LOOP,INTEGER,FLOAT,ARRAY,OBJECT,STRING,BOOL } ;
-typedef struct {
+typedef struct crate{
 	crate_type type;
 	union {
 		_word word_content;
@@ -77,17 +80,20 @@ typedef struct {
 	};
 } crate;
 
+#include "interpreter.h"
+
+
 linked_list<_word> get_dictionary();
 void push(int);
-int pop();
-int peek();
+int pop(interpreter);
+int peek(interpreter);
 
 void display_1();
 
 void add_word(_word);
 void run_word(const char *);
-void init_builtin();
-void init_ardu_builtin();
+void init_builtin(interpreter);
+void init_ardu_builtin(); //TODO update this
 
 void parse_line(char *);
 
