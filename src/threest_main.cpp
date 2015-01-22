@@ -147,7 +147,11 @@ void parse_line(char * input) {
 		}
 	} while ((element = strtok(NULL," ")) != NULL);
 }
-#ifndef __AVR_ARCH__
+
+
+/** Manages the console for running on linux
+ *
+ */
 int main(int argc, char * argv[]) {
 
 	init_builtin();
