@@ -52,7 +52,7 @@ void dup(interpreter * myInter) {
 void swap(interpreter * myInter) {
 
 	int var = myInter->pop();
-	int var2 = myinter->pop();
+	int var2 = myInter->pop();
 	myInter->push(var2);
 	myInter->push(var);
 }

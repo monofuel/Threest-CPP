@@ -42,7 +42,23 @@ public:
 
 	virtual _word * get_word(char *);
 
+	virtual vector<char *> * get_line();
+	virtual int get_current_word();
+	virtual void set_current_word(int);
+
 };
+
+vector<char *> * interpreter::get_line() {
+	return &current_line;
+}
+
+int interpreter::get_current_word() {
+	return current_word;
+}
+
+void interpreter::set_current_word(int var) {
+	current_word = var;
+}
 
 linked_list<_word> interpreter::get_global_dict() {
     return global_dict;
