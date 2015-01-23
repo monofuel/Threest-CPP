@@ -30,7 +30,7 @@ public:
 	virtual const char * get_output();
 	virtual void add_error(const char *);
 	virtual void add_output(const char *);
-	virtual void run_word(const char *);
+	virtual void run_word(crate);
 	virtual void parse_line(char *);
 
 	virtual linked_list<_word> get_global_dict();
@@ -130,11 +130,17 @@ void interpreter::add_word(_word item) {
 	}
 }
 
-void interpreter::run_word(const char * command) {
-	//TODO
-	//STUB
-	add_output("stub");
+void interpreter::run_word(crate item) {
+	//execute the item
+	switch (item.type) {
+		case WORD:
 
+		case INTEGER:
+
+
+		default:
+
+	}
 }
 
 //building__word is a bool to help with
@@ -155,7 +161,10 @@ void interpreter::parse_line(char * input) {
 	//us jump around
 	current_word = 0;
 	while (current_word < current_line.size()) {
-		run_word(current_line[current_word]);
+		//TODO
+		//package up a new crate for each
+		//item being defined to run
+		//run_word(current_line[current_word]);
 		current_word++;
 	}
 }

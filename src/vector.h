@@ -34,7 +34,7 @@ vector<T>::vector() {
 
 template<typename T>
 void vector<T>::push(T item) {
-	if (array == NULL) {
+	if (_size == 0) {
 		array = (T **) malloc(++_size * sizeof(void *));
 	} else {
 		array = (T **) realloc(array,++_size * sizeof(void *));
@@ -50,6 +50,7 @@ int vector<T>::size() {
 
 template<typename T>
 void vector<T>::clear() {
+	if (_size == 0) return;
 	free(array);
 	_size = 0;
 }
