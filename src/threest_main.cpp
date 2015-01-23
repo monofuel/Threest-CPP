@@ -1,4 +1,5 @@
 #include "threest.h"
+#include "threest_builtins.cpp"
 
 int main(int argc, char * argv[]) {
 
@@ -18,16 +19,11 @@ int main(int argc, char * argv[]) {
 		getline(&input,&size,stdin);
 		strtok(input,"\n"); //!< destroy newline character
 		myInter.parse_line(input); //!< execute the line
-		output = myInter.get_error();
-		if (output != (const char *) NULL) {
-			do {
-				cout << output;
-			} while(output = myInter.get_error());
-
-		} else if ((output = myInter.get_output()) != (const char *) NULL) {
-			do {
-				cout << output;
-			} while(output = myInter.get_output());
+		while (myInter.get_error_count() > 0) {
+			cout << myInter.get_error();
+		}
+		while (myInter.get_output_count() > 0) {
+			cout << myInter.get_output();
 		}
 
 		cout << " OK." << endl;

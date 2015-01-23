@@ -40,7 +40,7 @@ void vector<T>::push(T item) {
 		array = (T **) realloc(array,++_size * sizeof(void *));
 	}
 	//TODO: do we have to allocate memory to item and make a copy of it?
-	array[&item];
+	array[_size - 1] = &item;
 }
 
 template<typename T>
@@ -58,7 +58,7 @@ template<typename T>
 T vector<T>::operator[](int index) {
 	if (array == NULL || index >= _size) return NULL;
 	
-	return array[index];
+	return *array[index];
 
 }
 

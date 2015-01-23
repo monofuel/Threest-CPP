@@ -25,7 +25,10 @@
 
 using namespace std;
 
+//prototypes to make things work
+class interpreter;
 typedef struct crate crate;
+
 
 //_words can either be builtin
 //or made up of other _words.
@@ -33,7 +36,7 @@ typedef struct {
 	const char * command;
 	bool builtin;
 	union {
-	void (*_word_func)(void);
+	void (*_word_func)(interpreter);
 	linked_list<crate>* crates;
 	};
 
@@ -84,11 +87,14 @@ typedef struct crate{
 
 
 linked_list<_word> get_dictionary();
-void push(int);
-int pop(interpreter);
-int peek(interpreter);
 
-void display_1();
+////
+//void push(interpreter,int); //does this have to be here
+//int pop(interpreter); //does this have to be here
+//int peek(interpreter); //does this have to be here
+//void display_1(interpreter); //does this need to be here
+/////
+
 
 void add_word(_word);
 void run_word(const char *);
