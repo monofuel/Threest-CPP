@@ -36,7 +36,7 @@ typedef struct {
 	const char * command;
 	bool builtin;
 	union {
-	void (*_word_func)(interpreter);
+	void (*_word_func)(interpreter *);
 	linked_list<crate>* crates;
 	};
 
@@ -98,7 +98,7 @@ linked_list<_word> get_dictionary();
 
 void add_word(_word);
 void run_word(const char *);
-void init_builtin(interpreter);
+void init_builtin(interpreter *);
 void init_ardu_builtin(); //TODO update this
 
 void parse_line(char *);

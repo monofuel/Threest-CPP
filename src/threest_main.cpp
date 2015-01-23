@@ -10,7 +10,7 @@ int main(int argc, char * argv[]) {
 	//TODO we should handle command line arguments
 
 	interpreter myInter; //!< our interpreter instance
-	init_builtin(myInter); //!< populate default words
+	init_builtin(&myInter); //!< populate default words
 
 
 	while (true) {

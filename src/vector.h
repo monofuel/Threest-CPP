@@ -39,8 +39,10 @@ void vector<T>::push(T item) {
 	} else {
 		array = (T **) realloc(array,++_size * sizeof(void *));
 	}
-	//TODO: do we have to allocate memory to item and make a copy of it?
-	array[_size - 1] = &item;
+	T * item_copy = (T *) malloc(sizeof(T));
+	*item_copy = item;
+
+	array[_size - 1] = item_copy;
 }
 
 template<typename T>
@@ -51,15 +53,20 @@ int vector<T>::size() {
 template<typename T>
 void vector<T>::clear() {
 	if (_size == 0) return;
+	for (int i = 0; i < _size; i++) {
+		free(array[i]);
+	}
 	free(array);
 	_size = 0;
 }
 
 template<typename T>
 T vector<T>::operator[](int index) {
-	if (array == NULL || index >= _size) return NULL;
+	if (array == NULL || index >= _size) {
+		return NULL;
+	}
 	
-	return *array[index];
+	return *(array[index]);
 
 }
 

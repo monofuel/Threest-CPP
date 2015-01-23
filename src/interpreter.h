@@ -12,6 +12,7 @@ protected:
 
     //TODO replace stack from ints to crates
 	linked_list<int> stack;
+	linked_list<int> return_stack;
 	linked_list<_word> local_dict;
 	vector<char *> current_line;
 	int current_word;
@@ -39,6 +40,7 @@ public:
 	virtual int get_error_count();
 	virtual int get_output_count();
 
+	virtual _word * get_word(char *);
 
 };
 
@@ -131,20 +133,59 @@ void interpreter::add_word(_word item) {
 }
 
 void interpreter::run_word(crate item) {
+	_word element;
 	//execute the item
 	switch (item.type) {
 		case WORD:
+			//step through
+			element = item.word_content;
+			if (element.builtin == true) {
+				//execute word directly
+				element._word_func(this);
 
+			} else {
+				//TODO
+				//iterate over sub-words
+
+			}
+			break;
 		case INTEGER:
-
-
+			//push it on the stack
+			//push it REAAAALL good
+			push(item.int_content);
+			break;
 		default:
-
+		5 + 5;
 	}
 }
 
-//building__word is a bool to help with
-//multi-line _word definitions
+//TODO make new string equals function
+//rather than strcmp to only check for equality
+
+_word * interpreter::get_word(char * command) {
+
+	node<_word> * current = global_dict.get_top();
+	while (current != NULL) {
+		_word element = current->data;
+		if (strcmp(command,element.command) == 0) {
+			return &current->data;
+		}
+		current = current->next;
+	}
+	current = local_dict.get_top();
+	while (current != NULL) {
+		_word element = current->data;
+		if (strcmp(command,element.command) == 0) {
+			return &current->data;
+		}
+		current = current->next;
+	}
+
+	add_error("could not find word in dictionary");
+	add_error(command);
+	return (_word *) NULL;
+
+}
 
 void interpreter::parse_line(char * input) {
 	char * element = strtok(input," ");
@@ -165,6 +206,22 @@ void interpreter::parse_line(char * input) {
 		//package up a new crate for each
 		//item being defined to run
 		//run_word(current_line[current_word]);
+		if (strlen(current_line[current_word]) >= 1 && isdigit(current_line[current_word][0])) {
+			crate number;
+			number.type = INTEGER;
+			number.int_content = atoi(current_line[current_word]);
+			run_word(number);
+		} else {
+			crate my_word;
+			my_word.type = WORD;
+			//find word in dict and assign it to my_word.word_content
+			_word * word_tmp = get_word(current_line[current_word]);
+			if (word_tmp == (_word *) NULL) return;
+
+			my_word.word_content = *word_tmp;
+			run_word(my_word);
+		}
+		
 		current_word++;
 	}
 }
