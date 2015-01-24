@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <cstdlib>
+#include <cassert>
 #ifdef __AVR_ARCH__
 //suck it
 #ifndef NULL
@@ -62,9 +63,11 @@ void vector<T>::clear() {
 
 template<typename T>
 T vector<T>::operator[](int index) {
-	if (array == NULL || index >= _size) {
+	assert(index < _size); //out of bounds error
+	//TODO find a nicer way to handle this
+	/*if (array == NULL || index >= _size) {
 		return NULL;
-	}
+	}*/
 	
 	return *(array[index]);
 

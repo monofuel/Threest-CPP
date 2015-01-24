@@ -14,7 +14,8 @@ protected:
 	linked_list<int> stack;
 	linked_list<int> return_stack;
 	linked_list<_word> local_dict;
-	vector<char *> current_line;
+	vector<crate> * current_line;
+	linked_list<vector<crate>*> return_lines;
 	int current_word;
 	linked_list<const char *> errors_queue;
 	linked_list<const char *> output_queue;
@@ -42,14 +43,14 @@ public:
 
 	virtual _word * get_word(char *);
 
-	virtual vector<char *> * get_line();
+	virtual vector<crate> * get_line();
 	virtual int get_current_word();
 	virtual void set_current_word(int);
 
 };
 
-vector<char *> * interpreter::get_line() {
-	return &current_line;
+vector<crate> * interpreter::get_line() {
+	return current_line;
 }
 
 int interpreter::get_current_word() {
@@ -205,11 +206,15 @@ _word * interpreter::get_word(char * command) {
 
 void interpreter::parse_line(char * input) {
 	char * element = strtok(input," ");
-	current_line.clear();
+	current_line = malloc(sizeof(vector<crate>));
 
 	//parse the whole line into a vector
 	while (element != NULL) {
-		current_line.push(element);
+		crate item;
+		item.type = STRING;
+		//TODO should probably allocate a copy of the string
+		item.string_content = element;
+		current_line->push(item);
 		element = strtok(NULL," ");
 	}
 
@@ -217,21 +222,19 @@ void interpreter::parse_line(char * input) {
 	//with the possiblity of words making
 	//us jump around
 	current_word = 0;
-	while (current_word < current_line.size()) {
-		//TODO
-		//package up a new crate for each
-		//item being defined to run
-		//run_word(current_line[current_word]);
-		if (strlen(current_line[current_word]) >= 1 && isdigit(current_line[current_word][0])) {
+	while (current_word < current_line->size()) {
+		char * word_ptr = current_line[current_word];
+		if (strlen(word_ptr) >= 1 &&
+			isdigit(current_line[current_word]->string_content[0])) {
 			crate number;
 			number.type = INTEGER;
-			number.int_content = atoi(current_line[current_word]);
+			number.int_content = atoi((*current_line)[current_word].string_content);
 			run_word(number);
 		} else {
 			crate my_word;
 			my_word.type = WORD;
 			//find word in dict and assign it to my_word.word_content
-			_word * word_tmp = get_word(current_line[current_word]);
+			_word * word_tmp = get_word((*current_line)[current_word].string_content);
 			if (word_tmp == (_word *) NULL) return;
 
 			my_word.word_content = *word_tmp;
@@ -240,6 +243,8 @@ void interpreter::parse_line(char * input) {
 		
 		current_word++;
 	}
+
+	free(current_line);
 }
 
 
