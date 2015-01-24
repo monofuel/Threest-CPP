@@ -3,7 +3,65 @@
 
 void create_word(interpreter * myInter) {
 	//LOTS OF BIG STUFF
+	//TODO should do all this char * stuff with copies
+	vector<crate> list = *myInter->get_line();
+	int index = myInter->get_current_word();
+	_word my_word;
+	crate cur_element = list[++index];
+	my_word.command = cur_element.string_content;
+	my_word.builtin = false;
+	my_word.crates = new linked_list<crate>();
 
+	cur_element = list[++index];
+	while (strcmp(cur_element.string_content,";") != 0) {
+
+		
+		//INT
+		//
+		if (isdigit(cur_element.string_content[0])) {
+			crate number;
+			number.type = INTEGER;
+			number.int_content = atoi(cur_element.string_content);
+			my_word.crates->push(number);
+		}
+		
+		//IF
+		//
+		//ELSE
+		//
+		//THEN
+		//
+		//DO
+		//
+		//LOOP
+		//
+		//FLOAT
+		//
+		//ARRAY
+		//
+		//OBJECT
+		//
+		//STRING
+		//
+		//BOOL
+
+
+		//WORD
+		//check if the word exists in the dictionary
+		_word * word_ptr = myInter->get_word(cur_element.string_content);
+		if (word_ptr != (_word *) NULL) {
+			crate next_word;
+			next_word.type = WORD;
+			next_word.word_content = word_ptr;
+			my_word.crates->push(next_word);
+		}
+		
+		
+		cur_element = list[++index];
+	}
+
+	myInter->add_word(my_word);
+	myInter->set_current_word(index);
 
 }
 

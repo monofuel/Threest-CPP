@@ -100,7 +100,7 @@ int interpreter::pop() {
 	int value;
 	if (stack.size() == 0) {
 		//error case
-		errors_queue.append("stack underflow");
+		errors_queue.append("stack underflow\n");
 		return 0;
 	} else {
 		value = stack.get_top()->data;
@@ -122,7 +122,7 @@ void interpreter::add_word(_word item) {
 		while (current != NULL) {
 			if (strcmp(current->data.command,item.command) == 0) {
 				if (current->data.builtin) {
-					errors_queue.append("cannot redefine built-in words");
+					errors_queue.append("cannot redefine built-in words\n");
 					return;
 				}
 				free(current->data.crates);
@@ -150,19 +150,25 @@ void interpreter::add_word(_word item) {
 }
 
 void interpreter::run_word(crate item) {
-	_word element;
+	_word * element;
 	//execute the item
 	switch (item.type) {
 		case WORD:
 			//step through
 			element = item.word_content;
-			if (element.builtin == true) {
+			if (element->builtin == true) {
 				//execute word directly
-				element._word_func(this);
+				element->_word_func(this);
 
 			} else {
-				//TODO
 				//iterate over sub-words
+				//
+				
+				node<crate> * item = element->crates->get_top();
+				do {
+					run_word(item->data);
+					item = item->next;
+				} while (item != (node<crate> *) NULL);
 
 			}
 			break;
@@ -198,7 +204,7 @@ _word * interpreter::get_word(char * command) {
 		current = current->next;
 	}
 
-	add_error("could not find word in dictionary");
+	add_error("could not find word in dictionary\n");
 	add_error(command);
 	return (_word *) NULL;
 
@@ -206,7 +212,7 @@ _word * interpreter::get_word(char * command) {
 
 void interpreter::parse_line(char * input) {
 	char * element = strtok(input," ");
-	current_line = malloc(sizeof(vector<crate>));
+	current_line = new vector<crate>();
 
 	//parse the whole line into a vector
 	while (element != NULL) {
@@ -223,28 +229,27 @@ void interpreter::parse_line(char * input) {
 	//us jump around
 	current_word = 0;
 	while (current_word < current_line->size()) {
-		char * word_ptr = current_line[current_word];
+		char * word_ptr = (*current_line)[current_word].string_content;
 		if (strlen(word_ptr) >= 1 &&
-			isdigit(current_line[current_word]->string_content[0])) {
+			isdigit(word_ptr[0])) {
 			crate number;
 			number.type = INTEGER;
-			number.int_content = atoi((*current_line)[current_word].string_content);
+			number.int_content = atoi(word_ptr);
 			run_word(number);
 		} else {
 			crate my_word;
 			my_word.type = WORD;
 			//find word in dict and assign it to my_word.word_content
-			_word * word_tmp = get_word((*current_line)[current_word].string_content);
+			_word * word_tmp = get_word(word_ptr);
 			if (word_tmp == (_word *) NULL) return;
 
-			my_word.word_content = *word_tmp;
+			my_word.word_content = word_tmp;
 			run_word(my_word);
 		}
 		
 		current_word++;
 	}
 
-	free(current_line);
 }
 
 

@@ -72,7 +72,7 @@ enum crate_type { WORD,IF,ELSE,DO,LOOP,INTEGER,FLOAT,ARRAY,OBJECT,STRING,BOOL } 
 typedef struct crate{
 	crate_type type;
 	union {
-		_word word_content;
+		_word * word_content;
 		_if if_content;
 		_else else_content;
 		_loop loop_content;

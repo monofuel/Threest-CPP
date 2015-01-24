@@ -22,7 +22,7 @@ int main(int argc, char * argv[]) {
 		//TODO: all errors/output should be free'ed
 		//however some sources pass const char *'s.
 		//they should pass copies.
-
+		
 		while (myInter.get_error_count() > 0) {
 			cout << myInter.get_error();
 		}
