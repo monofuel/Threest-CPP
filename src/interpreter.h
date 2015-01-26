@@ -321,7 +321,7 @@ void interpreter::parse_line(char * input) {
 	current_word = 0;
 	while (current_word < current_line->size()) {
 		char * word_ptr = (*current_line)[current_word].string_content;
-		if (strlen(word_ptr) <= 1) {
+		if (strlen(word_ptr) <= 0) {
 			//ignore empty string
 
 		} else if (strlen(word_ptr) >= 1 &&
