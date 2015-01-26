@@ -1,6 +1,27 @@
 //monofuel
 
-My own personal implimentation of forth for learning.
+A forth/postscript like language done for fun in c++.
+
+currently (mostly) working on linux, It was working on arduino at one point but then i re-designed alot of the interpreter stuff better
+so it needs to be re-done.
+
+GOALS:
+support full dynamic typing of ints, floats, strings, arrays, booleans, and JSON objects.
+JSON objects can be treated like hashmaps, and should include ways to parse objects from strings, and output them to strings
+for interaction between processes or via the network.
 
 
-currently getting it to work on the arduino, so the code is super messy atm.
+for the linux version:
+File IO
+network IO
+
+TODO:
+fix memory leaks. _words should be using smart pointers, but i haven't used those before, so this will be a learning experience.
+char *'s should be handled better. i can't use strings as the arduino does not support strings.
+some errors and output use char *'s for dynamic output, while others might use const char *'s for specific errors. this means
+you can't assume to free everything after popping it off the output or error queues.
+
+add command line arguments for:
+	specifying a dictionary file
+	running single commands as arguments
+
