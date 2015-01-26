@@ -25,8 +25,11 @@ public:
 
 	//TODO sort these
 	virtual void push(int var);
+	virtual void push_r(int var);
 	virtual int pop();
+	virtual int pop_r();
 	virtual int peek();
+	virtual int peek_r();
 	virtual void add_word(_word);
 	virtual void add_word(_word *);
 	virtual const char * get_error();
@@ -97,23 +100,45 @@ void interpreter::push(int var) {
 	stack.push(var);
 }
 
+void interpreter::push_r(int var) {
+	return_stack.push(var);
+}
+
 int interpreter::pop() {
-	int value;
 	if (stack.size() == 0) {
 		//error case
 		errors_queue.append("stack underflow\n");
 		return 0;
 	} else {
-		value = stack.get_top()->data;
-		stack.pop();
+		return stack.pop();
 	}
-	return value;
+}
+
+int interpreter::pop_r() {
+	if (return_stack.size() == 0) {
+		//error case
+		errors_queue.append("return stack underflow\n");
+		return 0;
+	} else {
+		return return_stack.pop();
+	}
 }
 
 int interpreter::peek() {
+	if (stack.size() == 0) {
+		add_error("stack underflow\n");
+		return 0;
+	} 
 	return stack.get_top()->data;
 }
 
+int interpreter::peek_r() {
+	if (return_stack.size() == 0) {
+		add_error("return stack underflow\n");
+		return 0;
+	} 
+	return return_stack.get_top()->data;
+}
 
 void interpreter::add_word(_word item) {
 	_word * word_copy = (_word *) malloc(sizeof(_word));
@@ -162,9 +187,35 @@ void interpreter::add_word(_word * item) {
 }
 
 void interpreter::run_word(crate item) {
+	int index;
+	int limit;
 	_word * element;
 	//execute the item
 	switch (item.type) {
+		case DO:
+			//set up the return stack
+			index = pop();
+			limit = pop();
+			push_r(limit);
+			push_r(index);
+
+			break;
+		case LOOP:
+			index = pop_r();
+			limit = pop_r();
+			index++;
+			if (limit == index) {
+				break;
+			} else {
+				//else, let's jump back to do.
+				//REALLY NOT SURE WHY THIS NEEDS TO BE -2
+				//BUT IT WORKS IN ALL CASES
+				current_word = item.loop_content.do_ptr - 2;
+				push_r(limit);
+				push_r(index);
+			}
+
+			break;
 		case WORD:
 			//step through
 			element = item.word_content;
@@ -217,7 +268,7 @@ void interpreter::run_word(crate item) {
 			push(item.int_content);
 			break;
 		default:
-		5 + 5;
+		add_error("thread found unknown type\n");
 	}
 }
 
