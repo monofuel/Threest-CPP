@@ -31,14 +31,65 @@ void create_word(interpreter * myInter) {
 		
 		//IF
 		//
+		if (strcmp(cur_element.string_content,"IF") == 0) {
+
+			cur_element = list[++index];
+			continue;
+		}
 		//ELSE
 		//
 		//THEN
 		//
 		//DO
 		//
+		if (strcmp(cur_element.string_content,"DO") == 0) {
+			crate do_crate;
+			do_crate.type = DO;
+			my_word->crates->push(do_crate);
+
+			cur_element = list[++index];
+			continue;
+		}
 		//LOOP
 		//
+		if (strcmp(cur_element.string_content,"LOOP") == 0) {
+			crate loop_crate;
+			loop_crate.type = LOOP;
+			//find our matching DO
+			int reverse_index = index;
+			int loop_count = 0;
+			do {
+				reverse_index--;
+				if (list[reverse_index].type != STRING) continue;
+
+				//if we find another LOOP word, increment
+				//the loop_count.
+				if (strcmp(list[reverse_index].string_content,"LOOP") == 0) {
+					loop_count++;
+				}
+				
+				//if we find DO and loop count is > 0, 
+				//skip it and decrement loop_count.
+				//otherwise, let's store this index.
+				if (strcmp(list[reverse_index].string_content,"DO") == 0) {
+					if (loop_count == 0) {
+						loop_crate.loop_content.do_ptr = reverse_index;
+						break;
+					} else {
+						loop_count--;
+					}
+				}
+
+			} while (reverse_index > 0);
+			if (reverse_index == 0) {
+				myInter->add_error("found LOOP without matching DO\n");
+			}
+			
+
+			my_word->crates->push(loop_crate);
+			cur_element = list[++index];
+			continue;
+		}
 		//FLOAT
 		//
 		//ARRAY
@@ -69,6 +120,18 @@ void create_word(interpreter * myInter) {
 	myInter->add_word(my_word);
 	myInter->set_current_word(index);
 
+}
+
+void pop_r(interpreter * myInter) {
+	myInter->push(myInter->pop_r());
+}
+
+void push_r(interpreter * myInter) {
+	myInter->push_r(myInter->pop());
+}
+
+void peek_r(interpreter * myInter) {
+	myInter->push(myInter->peek_r());
 }
 
 void display_1(interpreter * myInter) {
@@ -170,6 +233,22 @@ void divide(interpreter * myInter) {
 
 void init_builtin(interpreter * myInter) {
 	_word tmp;
+
+
+	tmp.command = ">R";
+	tmp.builtin = true;
+	tmp._word_func = &push_r;
+	myInter->add_word(tmp);
+
+	tmp.command = "R>";
+	tmp.builtin = true;
+	tmp._word_func = &pop_r;
+	myInter->add_word(tmp);
+
+	tmp.command = "I";
+	tmp.builtin = true;
+	tmp._word_func = &peek_r;
+	myInter->add_word(tmp);
 
 	tmp.command = ":";
 	tmp.builtin = true;
