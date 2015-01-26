@@ -294,8 +294,9 @@ _word * interpreter::get_word(char * command) {
 		current = current->next;
 	}
 
-	add_error("could not find word in dictionary\n");
+	add_error("could not find word in dictionary: ");
 	add_error(command);
+	add_error("\n");
 	return (_word *) NULL;
 
 }
@@ -320,8 +321,10 @@ void interpreter::parse_line(char * input) {
 	current_word = 0;
 	while (current_word < current_line->size()) {
 		char * word_ptr = (*current_line)[current_word].string_content;
-		if (strlen(word_ptr) == 0) continue;
-		if (strlen(word_ptr) >= 1 &&
+		if (strlen(word_ptr) <= 1) {
+			//ignore empty string
+
+		} else if (strlen(word_ptr) >= 1 &&
 			isdigit(word_ptr[0])) {
 			crate number;
 			number.type = INTEGER;
