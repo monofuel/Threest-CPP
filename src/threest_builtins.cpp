@@ -160,7 +160,12 @@ void multiply(interpreter * myInter) {
 void divide(interpreter * myInter) {
 	int var1 = myInter->pop();
 	int var2 = myInter->pop();
-	myInter->push(var2 / var1);
+	if (var1 == 0) {
+		myInter->add_error("divide by 0 error");
+		myInter->push(0);
+	} else {
+		myInter->push(var2 / var1);
+	}
 }
 
 void init_builtin(interpreter * myInter) {
