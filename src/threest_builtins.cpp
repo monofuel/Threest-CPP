@@ -6,11 +6,13 @@ void create_word(interpreter * myInter) {
 	//TODO should do all this char * stuff with copies
 	vector<crate> list = *myInter->get_line();
 	int index = myInter->get_current_word();
-	_word my_word;
+	_word * my_word = (_word *) malloc(sizeof(_word));
 	crate cur_element = list[++index];
-	my_word.command = cur_element.string_content;
-	my_word.builtin = false;
-	my_word.crates = new linked_list<crate>();
+	char * word_copy = (char *) malloc(sizeof(char) * (strlen(cur_element.string_content) + 1));
+	strcpy(word_copy,cur_element.string_content);
+	my_word->command = word_copy;
+	my_word->builtin = false;
+	my_word->crates = new linked_list<crate>();
 
 	cur_element = list[++index];
 	while (strcmp(cur_element.string_content,";") != 0) {
@@ -22,7 +24,9 @@ void create_word(interpreter * myInter) {
 			crate number;
 			number.type = INTEGER;
 			number.int_content = atoi(cur_element.string_content);
-			my_word.crates->push(number);
+			my_word->crates->push(number);
+			cur_element = list[++index];
+			continue;
 		}
 		
 		//IF
@@ -53,7 +57,9 @@ void create_word(interpreter * myInter) {
 			crate next_word;
 			next_word.type = WORD;
 			next_word.word_content = word_ptr;
-			my_word.crates->push(next_word);
+			my_word->crates->push(next_word);
+			cur_element = list[++index];
+			continue;
 		}
 		
 		

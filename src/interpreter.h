@@ -8,12 +8,12 @@ class interpreter {
 protected:
 
 	//this should be static
-	linked_list<_word> global_dict;
+	linked_list<_word *> global_dict;
 
     //TODO replace stack from ints to crates
 	linked_list<int> stack;
 	linked_list<int> return_stack;
-	linked_list<_word> local_dict;
+	linked_list<_word *> local_dict;
 	vector<crate> * current_line;
 	linked_list<vector<crate>*> return_lines;
 	int current_word;
@@ -28,6 +28,7 @@ public:
 	virtual int pop();
 	virtual int peek();
 	virtual void add_word(_word);
+	virtual void add_word(_word *);
 	virtual const char * get_error();
 	virtual const char * get_output();
 	virtual void add_error(const char *);
@@ -35,8 +36,8 @@ public:
 	virtual void run_word(crate);
 	virtual void parse_line(char *);
 
-	virtual linked_list<_word> get_global_dict();
-    	virtual linked_list<_word> get_local_dict();
+	virtual linked_list<_word *> get_global_dict();
+    	virtual linked_list<_word *> get_local_dict();
 
 	virtual int get_error_count();
 	virtual int get_output_count();
@@ -61,11 +62,11 @@ void interpreter::set_current_word(int var) {
 	current_word = var;
 }
 
-linked_list<_word> interpreter::get_global_dict() {
+linked_list<_word *> interpreter::get_global_dict() {
     return global_dict;
 }
 
-linked_list<_word> interpreter::get_local_dict() {
+linked_list<_word *> interpreter::get_local_dict() {
     return local_dict;
 }
 
@@ -113,19 +114,29 @@ int interpreter::peek() {
 	return stack.get_top()->data;
 }
 
+
 void interpreter::add_word(_word item) {
+	_word * word_copy = (_word *) malloc(sizeof(_word));
+
+	*word_copy = item;
+	add_word(word_copy);
+
+
+}
+
+void interpreter::add_word(_word * item) {
 
 	//check if it will be global or not
-	if (item.command[0] == '#') {
+	if (item->command[0] == '#') {
 		//local
-		node<_word> * current = local_dict.get_top();
+		node<_word *> * current = local_dict.get_top();
 		while (current != NULL) {
-			if (strcmp(current->data.command,item.command) == 0) {
-				if (current->data.builtin) {
+			if (strcmp(current->data->command,item->command) == 0) {
+				if (current->data->builtin) {
 					errors_queue.append("cannot redefine built-in words\n");
 					return;
 				}
-				free(current->data.crates);
+				//free(current->data.crates);
 				current->data = item;
 			}
 			current = current->next;
@@ -133,15 +144,16 @@ void interpreter::add_word(_word item) {
 		local_dict.push(item);
 	} else {
 		//global
-		node<_word> * current = global_dict.get_top();
+		node<_word *> * current = global_dict.get_top();
 		while (current != NULL) {
-			if (strcmp(current->data.command,item.command) == 0) {
-				if (current->data.builtin) {
+			if (strcmp(current->data->command,item->command) == 0) {
+				if (current->data->builtin) {
 					errors_queue.append("cannot redefine built-in words");
 					return;
 				}
-				free(current->data.crates);
+				//free(current->data.crates);
 				current->data = item;
+
 			}
 			current = current->next;
 		}
@@ -165,10 +177,37 @@ void interpreter::run_word(crate item) {
 				//
 				
 				node<crate> * item = element->crates->get_top();
+				vector<crate> * next_line = new vector<crate>();
+				
+				//so the words appear in order, we have to flip the list arround
+				linked_list<crate> * tmp = new linked_list<crate>();
 				do {
-					run_word(item->data);
+					tmp->push(item->data);
 					item = item->next;
 				} while (item != (node<crate> *) NULL);
+
+				//convert this to a vector
+				//push current onto the return_lines stack
+				//set current_line to this line
+				//save the index
+				//
+				//after executing the sub-word, 
+				//pop it back off and restore the index
+				while (tmp->size() != 0) {
+					next_line->push(tmp->pop());
+				}
+				int old_current_word = current_word;
+				current_word = 0;
+				return_lines.push(current_line);
+				current_line = next_line;
+
+				while (current_word < current_line->size()) {
+					run_word((*current_line)[current_word]);
+					current_word++;
+				}
+				//restore things
+				current_word = old_current_word;
+				current_line = return_lines.pop();
 
 			}
 			break;
@@ -187,19 +226,19 @@ void interpreter::run_word(crate item) {
 
 _word * interpreter::get_word(char * command) {
 
-	node<_word> * current = global_dict.get_top();
+	node<_word *> * current = global_dict.get_top();
 	while (current != NULL) {
-		_word element = current->data;
-		if (strcmp(command,element.command) == 0) {
-			return &current->data;
+		_word * element = current->data;
+		if (strcmp(command,element->command) == 0) {
+			return current->data;
 		}
 		current = current->next;
 	}
 	current = local_dict.get_top();
 	while (current != NULL) {
-		_word element = current->data;
-		if (strcmp(command,element.command) == 0) {
-			return &current->data;
+		_word * element = current->data;
+		if (strcmp(command,element->command) == 0) {
+			return current->data;
 		}
 		current = current->next;
 	}
@@ -230,6 +269,7 @@ void interpreter::parse_line(char * input) {
 	current_word = 0;
 	while (current_word < current_line->size()) {
 		char * word_ptr = (*current_line)[current_word].string_content;
+		if (strlen(word_ptr) == 0) continue;
 		if (strlen(word_ptr) >= 1 &&
 			isdigit(word_ptr[0])) {
 			crate number;
