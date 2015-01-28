@@ -48,11 +48,16 @@ typedef struct {
 //otherwise, jump to the else pointer.
 typedef struct {
 	int else_ptr;
+	int then_ptr;
 } _if;
 
 typedef struct {
 	int then_ptr;
 } _else;
+
+//then doesn't need to store anything important
+//typedef struct {
+//} _then;
 
 //do doesn't need to store anything important
 //typedef struct {
@@ -68,7 +73,7 @@ typedef struct {
 //what to do. words and flow control are interpreted, while
 //ints, arrays, objects and other non-instructions are pushed
 //onto the stack.
-enum crate_type { WORD,IF,ELSE,DO,LOOP,INTEGER,FLOAT,ARRAY,OBJECT,STRING,BOOL } ;
+enum crate_type { WORD,IF,ELSE,THEN,DO,LOOP,INTEGER,FLOAT,ARRAY,OBJECT,STRING,BOOL } ;
 typedef struct crate{
 	crate_type type;
 	union {

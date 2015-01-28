@@ -189,6 +189,7 @@ void interpreter::add_word(_word * item) {
 void interpreter::run_word(crate item) {
 	int index;
 	int limit;
+	int choice;
 	_word * element;
 	//execute the item
 	switch (item.type) {
@@ -204,17 +205,51 @@ void interpreter::run_word(crate item) {
 			index = pop_r();
 			limit = pop_r();
 			index++;
+
+			//crude limit so that i don't keep shooting myself in the foot
+			if (index >= 2000) {
+				add_error("Loop limit exceeded, gun foot shoot prevented\n");
+				break;
+			}
+
 			if (limit == index) {
 				break;
 			} else {
-				//else, let's jump back to do.
-				//REALLY NOT SURE WHY THIS NEEDS TO BE -2
-				//BUT IT WORKS IN ALL CASES
-				current_word = item.loop_content.do_ptr - 2;
+				current_word = item.loop_content.do_ptr + 1;
 				push_r(limit);
 				push_r(index);
 			}
 
+			break;
+
+		case IF:
+			//pop the value off the stack and see if it's true.
+			//if it is, continue execution. otherwise, jump to else.
+			//if else doesn't exist, jump to then.
+			//the compiler assumes if else is -1, else does not exist
+			// since negative values make no sense for our word array
+			choice = pop();
+			if (!choice) {
+				//if it is false, jump to else. if else does not exist, jump to then
+				if (item.if_content.else_ptr == -1) {
+					//then isn't a real word so we can just skip it
+					current_word = item.if_content.then_ptr + 1;
+				} else {
+					//jump to the word directly after else for execution
+					//rather than execute the else word.
+					current_word = item.if_content.else_ptr + 1;
+				}
+			} //else continue execution
+
+			break;
+		case ELSE:
+			//if we hit ELSE, this means we were executing along the IF TRUE branch
+			// so we can assume to jump directly to word after then.
+			current_word = item.else_content.then_ptr + 1;
+
+			break;
+		case THEN:
+			//WE AIN'T DOIN SHIT
 			break;
 		case WORD:
 			//step through
@@ -306,12 +341,22 @@ void interpreter::parse_line(char * input) {
 	current_line = new vector<crate>();
 
 	//parse the whole line into a vector
+	//skip elements in ( ) 
+	bool comment = false;
 	while (element != NULL) {
 		crate item;
 		item.type = STRING;
 		//TODO should probably allocate a copy of the string
 		item.string_content = element;
-		current_line->push(item);
+		if (strcmp("(",element) == 0) {
+			comment = true;
+		}
+
+		if (!comment) {
+			current_line->push(item);
+		} else if (strcmp(")",element) == 0) {
+			comment = false;
+		}
 		element = strtok(NULL," ");
 	}
 

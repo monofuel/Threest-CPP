@@ -32,14 +32,102 @@ void create_word(interpreter * myInter) {
 		//IF
 		//
 		if (strcmp(cur_element.string_content,"IF") == 0) {
+			crate if_crate;
+			if_crate.type = IF;
+			if_crate.else_content.then_ptr = -1; //DEFAULT VALUE FOR NO ELSE STATEMENT
+			//find our matching ELSE and THEN
+			int forward_index = index;
+			int if_count = 0;
+			do {
+				forward_index++;
+				if (list[forward_index].type != STRING) continue;
 
+				//if we find another IF word, increment
+				//the then_count.
+				if (strcmp(list[forward_index].string_content,"IF") == 0) {
+					if_count++;
+				}
+				
+				//if we find THEN and the if_count is > 0, 
+				//skip it and decrement if_count.
+				//otherwise, let's store this index.
+				if (strcmp(list[forward_index].string_content,"THEN") == 0) {
+					if (if_count == 0) {
+						if_crate.if_content.then_ptr = forward_index - 3;
+						break;
+					} else {
+						if_count--;
+					}
+				}
+				//if we find ELSE and the if_count is > 0, 
+				//let's store this index.
+				if (strcmp(list[forward_index].string_content,"ELSE") == 0) {
+					if (if_count == 0) {
+						if_crate.if_content.else_ptr = forward_index - 3;
+						break;
+					}
+				}
+
+			} while (forward_index < list.size());
+			if (forward_index == list.size()) {
+				myInter->add_error("found IF without matching THEN\n");
+			}
+			
+
+			my_word->crates->push(if_crate);
 			cur_element = list[++index];
 			continue;
 		}
 		//ELSE
 		//
+		if (strcmp(cur_element.string_content,"ELSE") == 0) {
+			crate else_crate;
+			else_crate.type = ELSE;
+			//find our matching THEN
+			int forward_index = index;
+			int if_count = 0;
+			do {
+				forward_index++;
+				if (list[forward_index].type != STRING) continue;
+
+				//if we find another IF word, increment
+				//the then_count.
+				if (strcmp(list[forward_index].string_content,"IF") == 0) {
+					if_count++;
+				}
+				
+				//if we find THEN and the if_count is > 0, 
+				//skip it and decrement if_count.
+				//otherwise, let's store this index.
+				if (strcmp(list[forward_index].string_content,"THEN") == 0) {
+					if (if_count == 0) {
+						else_crate.else_content.then_ptr = forward_index - 3;
+						break;
+					} else {
+						if_count--;
+					}
+				}
+
+			} while (forward_index < list.size());
+			if (forward_index == list.size()) {
+				myInter->add_error("found ELSE without matching THEN\n");
+			}
+			
+
+			my_word->crates->push(else_crate);
+			cur_element = list[++index];
+			continue;
+		}
 		//THEN
 		//
+		if (strcmp(cur_element.string_content,"THEN") == 0) {
+			crate then_crate;
+			then_crate.type = THEN;
+			my_word->crates->push(then_crate);
+
+			cur_element = list[++index];
+			continue;
+		}
 		//DO
 		//
 		if (strcmp(cur_element.string_content,"DO") == 0) {
@@ -73,7 +161,7 @@ void create_word(interpreter * myInter) {
 				//otherwise, let's store this index.
 				if (strcmp(list[reverse_index].string_content,"DO") == 0) {
 					if (loop_count == 0) {
-						loop_crate.loop_content.do_ptr = reverse_index;
+						loop_crate.loop_content.do_ptr = reverse_index - 3;
 						break;
 					} else {
 						loop_count--;
@@ -100,7 +188,16 @@ void create_word(interpreter * myInter) {
 		//
 		//BOOL
 
+		//RECURSION
+		if (strcmp(cur_element.string_content,"RECURSE") == 0) {
+			crate recurse_crate;
+			recurse_crate.type = WORD;
+			recurse_crate.word_content = my_word;
 
+			my_word->crates->push(recurse_crate);
+			cur_element = list[++index];
+			continue;
+		}
 		//WORD
 		//check if the word exists in the dictionary
 		_word * word_ptr = myInter->get_word(cur_element.string_content);
@@ -180,8 +277,8 @@ void swap(interpreter * myInter) {
 
 	int var = myInter->pop();
 	int var2 = myInter->pop();
-	myInter->push(var2);
 	myInter->push(var);
+	myInter->push(var2);
 }
 
 void is_equal(interpreter * myInter) {
