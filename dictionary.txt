@@ -1,4 +1,5 @@
 fibonacci sequence?
 
-: FIB ( n -- n ) DUP 1 == IF 1 ELSE 1 - DUP 1 - RECURSE SWAP RECURSE + THEN ;
+: FIB ( n -- n ) DUP 1 == IF DROP 1 ELSE DUP 2 == IF DROP 1 ELSE 1 - DUP 1 - RECURSE SWAP RECURSE + THEN THEN ;
+
 

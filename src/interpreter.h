@@ -20,6 +20,7 @@ protected:
 	linked_list<const char *> errors_queue;
 	linked_list<const char *> output_queue;
 
+	bool bail_out = false;
 
 public:
 
@@ -187,6 +188,14 @@ void interpreter::add_word(_word * item) {
 }
 
 void interpreter::run_word(crate item) {
+	if (bail_out) return;
+
+	if (return_lines.size() > 20) {
+		bail_out = true;
+		return;
+
+	}
+
 	int index;
 	int limit;
 	int choice;
@@ -340,6 +349,9 @@ void interpreter::parse_line(char * input) {
 	char * element = strtok(input," ");
 	current_line = new vector<crate>();
 
+	//reset the status
+	bail_out = false;
+
 	//parse the whole line into a vector
 	//skip elements in ( ) 
 	bool comment = false;
@@ -388,6 +400,10 @@ void interpreter::parse_line(char * input) {
 		}
 		
 		current_word++;
+	}
+
+	if (bail_out) {
+		add_error("function depth exceeded, bailing out");
 	}
 
 }

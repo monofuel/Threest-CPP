@@ -236,7 +236,6 @@ void display_1(interpreter * myInter) {
 	char * buff = (char *) malloc(50 * sizeof(char));
 	sprintf(buff,"%d ",myInter->pop());
 	myInter->add_output(buff);
-
 }
 
 void bye(interpreter * myInter) {
