@@ -5,6 +5,10 @@ A forth/postscript like language done for fun in c++.
 currently (mostly) working on linux, It was working on arduino at one point but then i re-designed alot of the interpreter stuff better
 so it needs to be re-done.
 
+FIXES:
+if a line doesn't end in a ;, vector error
+DO... with no loop doesn't error?
+
 GOALS:
 support full dynamic typing of ints, floats, strings, arrays, booleans, and JSON objects.
 JSON objects can be treated like hashmaps, and should include ways to parse objects from strings, and output them to strings
