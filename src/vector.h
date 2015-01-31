@@ -1,6 +1,7 @@
-#include <cstddef>
-#include <cstdlib>
-#include <cassert>
+//can't use any of these on arduino
+//#include <cstddef>
+//#include <cstdlib>
+//#include <cassert>
 #ifdef __AVR_ARCH__
 //suck it
 #ifndef NULL
@@ -55,6 +56,7 @@ template<typename T>
 void vector<T>::clear() {
 	if (_size == 0) return;
 	for (int i = 0; i < _size; i++) {
+
 		free(array[i]);
 	}
 	free(array);
@@ -63,7 +65,11 @@ void vector<T>::clear() {
 
 template<typename T>
 T vector<T>::operator[](int index) {
-	assert(index < _size); //out of bounds error
+	//assert(index < _size); //out of bounds error
+	if (index >= _size) {
+		exit(1);
+	}
+	
 	//TODO find a nicer way to handle this
 	/*if (array == NULL || index >= _size) {
 		return NULL;
