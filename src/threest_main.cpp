@@ -66,13 +66,17 @@ void parseArguments(int argc, char * argv[]) {
 
 void interpret(interpreter * myInter) {
 
-    string input;
+    char * input;
+    size_t size;
+    const char * output;
 
     myInter->add_error = display_error;
     myInter->add_output = display_output;
 
     while (true) {
-        getline(cin,input);
+        input =(char *)  NULL;
+        size = 0;
+        getline(&input,&size,stdin);
         strtok(input,"\n"); //!< destroy newline character
         myInter->parse_line(input); //!< execute the line
 
