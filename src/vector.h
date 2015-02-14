@@ -36,11 +36,7 @@ vector<T>::vector() {
 
 template<typename T>
 void vector<T>::push(T item) {
-	if (_size == 0) {
-		array = (T **) malloc(++_size * sizeof(void *));
-	} else {
-		array = (T **) realloc(array,++_size * sizeof(void *));
-	}
+    array = (T **) realloc(array,++_size * sizeof(void *));
 	T * item_copy = (T *) malloc(sizeof(T));
 	*item_copy = item;
 
