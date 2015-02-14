@@ -23,29 +23,6 @@ linked_list<_word *> interpreter::get_local_dict() {
     return local_dict;
 }
 
-const char * interpreter::get_error() {
-	return errors_queue.pop();
-}
-const char * interpreter::get_output() {
-	return output_queue.pop();
-}
-
-int interpreter::get_error_count() {
-	return errors_queue.size();
-}
-
-int interpreter::get_output_count() {
-	return output_queue.size();
-}
-
-void interpreter::add_error(const char * line) {
-	errors_queue.append(line);
-}
-
-void interpreter::add_output(const char * line) {
-	output_queue.append(line);
-}
-
 void interpreter::push(int var) {
 	stack.push(var);
 }
@@ -57,7 +34,7 @@ void interpreter::push_r(int var) {
 int interpreter::pop() {
 	if (stack.size() == 0) {
 		//error case
-		errors_queue.append("stack underflow\n");
+        add_error("stack underflow\n");
 		return 0;
 	} else {
 		return stack.pop();
@@ -67,7 +44,7 @@ int interpreter::pop() {
 int interpreter::pop_r() {
 	if (return_stack.size() == 0) {
 		//error case
-		errors_queue.append("return stack underflow\n");
+        add_error("return stack underflow\n");
 		return 0;
 	} else {
 		return return_stack.pop();
@@ -108,7 +85,7 @@ void interpreter::add_word(_word * item) {
 		while (current != NULL) {
 			if (strcmp(current->data->command,item->command) == 0) {
 				if (current->data->builtin) {
-					errors_queue.append("cannot redefine built-in words\n");
+                    add_error("cannot redefine built-in words\n");
 					return;
 				}
 				//free(current->data.crates);
@@ -123,7 +100,7 @@ void interpreter::add_word(_word * item) {
 		while (current != NULL) {
 			if (strcmp(current->data->command,item->command) == 0) {
 				if (current->data->builtin) {
-					errors_queue.append("cannot redefine built-in words");
+                    add_error("cannot redefine built-in words");
 					return;
 				}
 				//free(current->data.crates);
