@@ -81,6 +81,8 @@ T linked_list<T>::pop(){
 	node<T> * tmp = top;
 	top = top->next;
 	if (top == NULL) base = NULL;
-	return tmp->data;
+    T data_copy = tmp->data;
+    delete(tmp);
+    return data_copy;
 }
 #endif

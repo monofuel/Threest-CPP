@@ -230,6 +230,9 @@ void interpreter::run_word(crate item) {
 				current_word = old_current_word;
 				current_line = return_lines.pop();
 
+                delete(tmp);
+                delete(next_line);
+
 			}
 			break;
 		case INTEGER:
@@ -332,5 +335,6 @@ void interpreter::parse_line(char * input) {
 		add_error("function depth exceeded, bailing out");
 	}
 
+    delete(current_line);
 }
 
