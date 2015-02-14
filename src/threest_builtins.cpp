@@ -232,6 +232,10 @@ void peek_r(interpreter * myInter) {
 	myInter->push(myInter->peek_r());
 }
 
+void newline(interpreter * myInter) {
+    myInter->add_output("\n");
+}
+
 void display_1(interpreter * myInter) {
 	//TODO do this better
 	char * buff = (char *) malloc(50 * sizeof(char));
@@ -332,6 +336,10 @@ void divide(interpreter * myInter) {
 void init_builtin(interpreter * myInter) {
 	_word tmp;
 
+    tmp.command = "NL";
+    tmp.builtin = true;
+    tmp._word_func = &newline;
+    myInter->add_word(tmp);
 
 	tmp.command = ">R";
 	tmp.builtin = true;

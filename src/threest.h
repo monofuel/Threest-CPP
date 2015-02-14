@@ -104,7 +104,8 @@ linked_list<_word> get_dictionary();
 void add_word(_word);
 void run_word(const char *);
 void init_builtin(interpreter *);
-void init_ardu_builtin(interpreter *); //TODO update this
+void init_ardu_builtin(interpreter *);
+void init_linux_builtin(interpreter *);
 
 void parse_line(char *);
 
