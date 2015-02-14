@@ -1,4 +1,4 @@
-/* -*- c++ -*- */
+sr/* -*- c++ -*- */
 #include <threest.h>
 #include <interpreter.h>
 #include <linked_list.h>
@@ -17,10 +17,35 @@
 interpreter serialInter;
 interpreter internalInter;
 
+int error_count = 0;
+
+void display_output(const char * line) {
+  Serial.print(line);
+}
+
+void display_error(const char * line) {
+  Serial.print(line);
+  error_count++;
+}
+
+void output_stub(const char * line) {
+  
+}
+
+void error_stub(const char * line) {
+  error_count++;
+}
 
 void setup() {
   init_builtin(&internalInter);
   init_ardu_builtin(&internalInter);
+  
+  internalInter.add_error = error_stub;
+  internalInter.add_output = output_stub;
+  serialInter.add_error = display_error;
+  serialInter.add_output = display_output;
+  
+  
   Serial.begin(9600);
   while(!Serial);
   
@@ -50,14 +75,6 @@ void loop() {
   }
   input[i] = '\0';
   serialInter.parse_line(input);
-  
-  while (serialInter.get_error_count() > 0) {
-    Serial.print(serialInter.get_error());
-  }
-  
-  while (serialInter.get_output_count() > 0) {
-    Serial.print(serialInter.get_output());
-  }
   
   Serial.println(" OK");
   
