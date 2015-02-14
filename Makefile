@@ -10,9 +10,9 @@ OUTPUT=bin/threest
 SRC=src/threest_main.cpp src/interpreter.cpp src/threest_linux_builtins.cpp
 
 
-all: Threest test
+all: bin/threest
 
-test: Threest
+test: bin/threest
 
 	#"------------------------------------"
 	#"		Performing Tests"
@@ -49,6 +49,9 @@ test: Threest
 	#test recursion
 	echo ": TEST 1 - DUP = IF ELSE RECURSE THEN ; 5 TEST" | ./bin/threest -l
 
+	#test fibonacci number generator
+	echo "5 FIB ." | ./bin/threest -d tests/dictionary.txt -l
+
 	#test persistency mode
 	
 	#FOR FUTURE FEATURES
@@ -58,12 +61,14 @@ test: Threest
 	#test json
 
 	#test cross-type math
+
+
 	#"------------------------------------"
 	#"		Test SUCCESS"
 	#"------------------------------------"
 
 
-Threest: src/threest_main.cpp src/threest.h src/threest_builtins.cpp src/linked_list.h
+bin/threest: src/threest_main.cpp src/threest.h src/threest_builtins.cpp src/linked_list.h
 	$(CC) $(CFLAGS) -o $(OUTPUT) $(SRC)
 clean:
 	rm $(OUTPUT) || true

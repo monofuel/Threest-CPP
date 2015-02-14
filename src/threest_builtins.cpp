@@ -5,7 +5,7 @@ void create_word(interpreter * myInter) {
 	//LOTS OF BIG STUFF
 	vector<crate> list = *myInter->get_line();
 	int index = myInter->get_current_word();
-    int start_index = index;
+    int start_index = index + 3;
     _word * my_word = (_word *) malloc(sizeof(_word)); //TODO replace with smart pointer
 	crate cur_element = list[++index];
 	char * word_copy = (char *) malloc(sizeof(char) * (strlen(cur_element.string_content) + 1));
