@@ -3,10 +3,15 @@
 //#include <cstdlib>
 //#include <cassert>
 #ifdef __AVR_ARCH__
+#include <assert.h>
 //suck it
 #ifndef NULL
 #define NULL null
 #endif
+
+#else
+#include <cassert>
+
 #endif
 
 #ifndef	VECTOR_H
@@ -22,7 +27,7 @@ protected:
 public:
 	vector();
 	vector(T*,int);
-	~vector();
+	virtual ~vector();
 	
 	virtual void push(T);
 	virtual void clear();
@@ -56,17 +61,21 @@ template<typename T>
 void vector<T>::push(T item) {
 	T* newArray = NULL;
 	
+	//on first element, array will be NULL
 	//check if we are initializing a new array, or creating a new one
-	if (_size == 0) {
-		array = (T *) malloc(++_size * sizeof(T));
-		assert(array != NULL); //failed to allocate memory
-	} else {
-		newArray = (T *) realloc(array,++_size * sizeof(T));
-		assert(newArray != NULL); //failed to allocate memory
-		array = newArray;
-	}
+	newArray = (T *) realloc(array,++_size * sizeof(T));
+	assert(newArray != NULL); //failed to allocate memory
+	array = newArray;
 
 	array[_size - 1] = item;
+}
+
+template<typename T>
+T vector<T>::pop() {
+	T tmp = array[_size-1];
+	newArray = (T *) realloc(array,--_size * sizeof(T));
+	assert(newArray != NULL); //failed to allocate memory
+	return tmp;
 }
 
 template<typename T>

@@ -27,6 +27,7 @@ protected:
 
 public:
 	linked_list();
+	virtual ~linked_list();
 
 	virtual int size();
 	virtual void push(T);
@@ -41,6 +42,11 @@ linked_list<T>::linked_list() {
 	top = (node<T> *) NULL;
 	base = (node<T> *) NULL;
 	_size = 0;
+}
+
+template<typename T>
+linked_list<T>::~linked_list() {
+	//TODO
 }
 
 template<typename T>
