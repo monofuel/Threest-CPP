@@ -85,6 +85,7 @@ T* vector<T>::list() {
 	T* output_array = (T *) malloc(_size * sizeof(T));
 	assert(output_array != NULL);
 	memcpy(output_array,array,_size * sizeof(T));
+	return output_array;
 }
 
 template<typename T>
