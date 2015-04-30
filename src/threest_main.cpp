@@ -5,7 +5,6 @@ int main(int argc, char * argv[]) {
 
 	char * input;
 	size_t size;
-	const char * output;
 
 	//TODO we should handle command line arguments
 
