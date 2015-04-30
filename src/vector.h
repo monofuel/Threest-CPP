@@ -30,6 +30,7 @@ public:
 	virtual ~vector();
 	
 	virtual void push(T);
+	virtual T pop();
 	virtual void clear();
 	virtual int size();
 	virtual T* list();
@@ -72,6 +73,8 @@ void vector<T>::push(T item) {
 
 template<typename T>
 T vector<T>::pop() {
+	T* newArray = NULL;
+	
 	T tmp = array[_size-1];
 	newArray = (T *) realloc(array,--_size * sizeof(T));
 	assert(newArray != NULL); //failed to allocate memory
