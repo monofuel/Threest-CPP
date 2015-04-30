@@ -3,12 +3,13 @@
 
 void create_word(interpreter * myInter) {
 	//LOTS OF BIG STUFF
-	//TODO should do all this char * stuff with copies
 	vector<crate> list = *myInter->get_line();
 	int index = myInter->get_current_word();
-	_word * my_word = (_word *) malloc(sizeof(_word));
+    int start_index = index + 3;
+    _word * my_word = (_word *) malloc(sizeof(_word)); //TODO replace with smart pointer
 	crate cur_element = list[++index];
 	char * word_copy = (char *) malloc(sizeof(char) * (strlen(cur_element.string_content) + 1));
+
 	strcpy(word_copy,cur_element.string_content);
 	my_word->command = word_copy;
 	my_word->builtin = false;
@@ -53,7 +54,7 @@ void create_word(interpreter * myInter) {
 				//otherwise, let's store this index.
 				if (strcmp(list[forward_index].string_content,"THEN") == 0) {
 					if (if_count == 0) {
-						if_crate.if_content.then_ptr = forward_index - 3;
+                        if_crate.if_content.then_ptr = forward_index - start_index;
 						break;
 					} else {
 						if_count--;
@@ -63,7 +64,7 @@ void create_word(interpreter * myInter) {
 				//let's store this index.
 				if (strcmp(list[forward_index].string_content,"ELSE") == 0) {
 					if (if_count == 0) {
-						if_crate.if_content.else_ptr = forward_index - 3;
+                        if_crate.if_content.else_ptr = forward_index - start_index;
 						break;
 					}
 				}
@@ -101,7 +102,7 @@ void create_word(interpreter * myInter) {
 				//otherwise, let's store this index.
 				if (strcmp(list[forward_index].string_content,"THEN") == 0) {
 					if (if_count == 0) {
-						else_crate.else_content.then_ptr = forward_index - 3;
+                        else_crate.else_content.then_ptr = forward_index - start_index;
 						break;
 					} else {
 						if_count--;
@@ -161,7 +162,7 @@ void create_word(interpreter * myInter) {
 				//otherwise, let's store this index.
 				if (strcmp(list[reverse_index].string_content,"DO") == 0) {
 					if (loop_count == 0) {
-						loop_crate.loop_content.do_ptr = reverse_index - 3;
+                        loop_crate.loop_content.do_ptr = reverse_index - start_index;
 						break;
 					} else {
 						loop_count--;
@@ -231,11 +232,16 @@ void peek_r(interpreter * myInter) {
 	myInter->push(myInter->peek_r());
 }
 
+void newline(interpreter * myInter) {
+    myInter->add_output("\n");
+}
+
 void display_1(interpreter * myInter) {
 	//TODO do this better
 	char * buff = (char *) malloc(50 * sizeof(char));
-	sprintf(buff,"%d ",myInter->pop());
+    snprintf(buff,50,"%d ",myInter->pop());
 	myInter->add_output(buff);
+    free(buff);
 }
 
 void bye(interpreter * myInter) {
@@ -330,6 +336,10 @@ void divide(interpreter * myInter) {
 void init_builtin(interpreter * myInter) {
 	_word tmp;
 
+    tmp.command = "NL";
+    tmp.builtin = true;
+    tmp._word_func = &newline;
+    myInter->add_word(tmp);
 
 	tmp.command = ">R";
 	tmp.builtin = true;
@@ -371,7 +381,7 @@ void init_builtin(interpreter * myInter) {
 	tmp._word_func = &greater_than;
 	myInter->add_word(tmp);
 
-	tmp.command = "==";
+    tmp.command = "=";
 	tmp.builtin = true;
 	tmp._word_func = &is_equal;
 	myInter->add_word(tmp);

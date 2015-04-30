@@ -1,13 +1,12 @@
 #not using std containers because we can't us them on the arduino
 impliment hashmap and vectors
 
-impliment the interpreter as a class so you can have multiple
-have 2 dictionaries, a 'global' dictionary and a 'local' dictionary.
-local dictionary words should have some sort of prefix.
+handle tabs as whitespace
+
+Threest function to load dictionary files
 
 switch to smart pointers for clean defining/undefining words
 
-replace array of char * in a word struct with pointer to other words for traditional forth-like words and word chaining
 allow words to enumerate other types like
 string literals
 ints and floats

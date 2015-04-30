@@ -1,5 +1,6 @@
-#include <cstddef>
-#include <cstdlib>
+//can't use these on arduino
+//#include <cstddef>
+//#include <cstdlib>
 #ifdef __AVR_ARCH__
 //suck it
 #ifndef NULL
@@ -80,6 +81,8 @@ T linked_list<T>::pop(){
 	node<T> * tmp = top;
 	top = top->next;
 	if (top == NULL) base = NULL;
-	return tmp->data;
+    T data_copy = tmp->data;
+    delete(tmp);
+    return data_copy;
 }
 #endif

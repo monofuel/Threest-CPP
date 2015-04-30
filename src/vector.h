@@ -1,6 +1,7 @@
-#include <cstddef>
-#include <cstdlib>
-#include <cassert>
+//can't use any of these on arduino
+//#include <cstddef>
+//#include <cstdlib>
+//#include <cassert>
 #ifdef __AVR_ARCH__
 //suck it
 #ifndef NULL
@@ -91,6 +92,7 @@ T* vector<T>::list() {
 template<typename T>
 T vector<T>::operator[](int index) {
 	assert(index < _size); //out of bounds error
+	
 	
 	return array[index];
 }
