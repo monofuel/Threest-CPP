@@ -67,7 +67,7 @@ void parseArguments(int argc, char * argv[]) {
             cout << "Possible arguments:" << endl;
             cout << "   -d [filename]       dictionary file to load" << endl;
             cout << "   -l                  exits after one line" << endl;
-            cout << "   -p [filename]       persistency mode, error-free output is appended to file" << endl;
+            cout << "   -p [filename]       persistency mode, error-free output is push_fronted to file" << endl;
             cout << "   -e [filename]       executes file and exists" << endl;
             exit(-1);
         default:

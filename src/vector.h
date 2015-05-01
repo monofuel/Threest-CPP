@@ -14,20 +14,20 @@
 
 #endif
 
-#ifndef	VECTOR_H
-#define VECTOR_H
+#ifndef	vec_H
+#define vec_H
 
 template<typename T>
-class vector {
+class vec {
 
 protected:
 	int _size;
 	T * array;
 
 public:
-	vector();
-	vector(T*,int);
-	virtual ~vector();
+	vec();
+	vec(T*,int);
+	virtual ~vec();
 	
 	virtual void push(T);
 	virtual T pop();
@@ -35,17 +35,17 @@ public:
 	virtual int size();
 	virtual T* list();
 	virtual T operator[](int);
-	vector<T>& operator=(const vector<T>);
+	vec<T>& operator=(const vec<T>);
 };
 
 template<typename T>
-vector<T>::vector() {
+vec<T>::vec() {
 	array = (T *) NULL;
 	_size = 0;
 }
 
 template<typename T>
-vector<T>::vector(T* list, int size) {
+vec<T>::vec(T* list, int size) {
 	array = (T *) malloc(size * sizeof(T));
 	assert(array != NULL);
 	_size = size;
@@ -53,13 +53,14 @@ vector<T>::vector(T* list, int size) {
 }
 
 template<typename T>
-vector<T>::~vector() {
-	free(array);
+vec<T>::~vec() {
+	if (_size > 0)
+		free(array);
 	_size = 0;
 }
 
 template<typename T>
-void vector<T>::push(T item) {
+void vec<T>::push(T item) {
 	T* newArray = NULL;
 	
 	//on first element, array will be NULL
@@ -72,7 +73,7 @@ void vector<T>::push(T item) {
 }
 
 template<typename T>
-T vector<T>::pop() {
+T vec<T>::pop() {
 	T* newArray = NULL;
 	
 	T tmp = array[_size-1];
@@ -83,19 +84,19 @@ T vector<T>::pop() {
 }
 
 template<typename T>
-int vector<T>::size() {
+int vec<T>::size() {
 	return _size;
 }
 
 template<typename T>
-void vector<T>::clear() {
+void vec<T>::clear() {
 	if (_size == 0) return;
 	free(array);
 	_size = 0;
 }
 
 template<typename T>
-T* vector<T>::list() {
+T* vec<T>::list() {
 	T* output_array = (T *) malloc(_size * sizeof(T));
 	assert(output_array != NULL);
 	memcpy(output_array,array,_size * sizeof(T));
@@ -103,7 +104,7 @@ T* vector<T>::list() {
 }
 
 template<typename T>
-T vector<T>::operator[](int index) {
+T vec<T>::operator[](int index) {
 	assert(index < _size); //out of bounds error
 	
 	
@@ -111,8 +112,8 @@ T vector<T>::operator[](int index) {
 }
 
 template<typename T>
-vector<T>& vector<T>::operator=( const vector<T> other) {
-	//TODO not sure what happens if you assign = to an existing vector
+vec<T>& vec<T>::operator=( const vec<T> other) {
+	//TODO not sure what happens if you assign = to an existing vec
 	//does it destruct the previous vec and run this, or
 	//does it just run this on the existing vec?
 	array = other.list();

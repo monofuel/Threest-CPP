@@ -3,7 +3,7 @@
 
 void create_word(interpreter * myInter) {
 	//LOTS OF BIG STUFF
-	vector<crate> list = *myInter->get_line();
+	vec<crate> list = *myInter->get_line();
 	int index = myInter->get_current_word();
     int start_index = index + 3;
     _word * my_word = (_word *) malloc(sizeof(_word)); //TODO replace with smart pointer
