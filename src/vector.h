@@ -55,7 +55,7 @@ vec<T>::vec(T* list, int size) {
 
 template<typename T>
 vec<T>::~vec() {
-	if (_size > 0)
+	if (_size > 0 && array != NULL)
 		free(array);
 	_size = 0;
 }
@@ -127,11 +127,10 @@ vec<T>& vec<T>::operator=( const vec<T> other) {
 	//TODO not sure what happens if you assign = to an existing vec
 	//does it destruct the previous vec and run this, or
 	//does it just run this on the existing vec?
-	std::cout << "copying list" << std::endl;
-	array = other.list();
-	std::cout << "copying size" << std::endl;
+	array = other.list(); //list returns a copy of the list to us
 	_size = other.size();
-	std::cout << "copy done" << std::endl;
+	
+	return *this;
 }
 
 #endif
