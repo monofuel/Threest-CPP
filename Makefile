@@ -76,10 +76,10 @@ test_threest: bin/threest
 	#"		Test SUCCESS"
 	#"------------------------------------"
 
-bin/lib_test: src/lib_test.cpp
+bin/lib_test: src/lib_test.cpp src/linked_list.h src/vector.h src/hash_map.h
 	$(CC) $(CFLAGS) -o bin/lib_test src/lib_test.cpp
 
-bin/threest: src/threest_main.cpp src/threest.h src/threest_builtins.cpp src/linked_list.h
+bin/threest: src/threest_main.cpp src/threest.h src/threest_builtins.cpp src/linked_list.h src/vector.h
 	$(CC) $(CFLAGS) -o $(OUTPUT) $(SRC)
 clean:
 	rm $(OUTPUT) || true

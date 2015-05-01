@@ -79,7 +79,8 @@ T vec<T>::pop() {
 	
 	T tmp = array[_size-1];
 	newArray = (T *) realloc(array,--_size * sizeof(T));
-	assert(newArray != NULL); //failed to allocate memory
+	if (_size != 0) //if we don't expect it to be null
+		assert(newArray != NULL); //check if failed to allocate memory
 	array = newArray;
 	return tmp;
 }
@@ -126,8 +127,11 @@ vec<T>& vec<T>::operator=( const vec<T> other) {
 	//TODO not sure what happens if you assign = to an existing vec
 	//does it destruct the previous vec and run this, or
 	//does it just run this on the existing vec?
+	std::cout << "copying list" << std::endl;
 	array = other.list();
+	std::cout << "copying size" << std::endl;
 	_size = other.size();
+	std::cout << "copy done" << std::endl;
 }
 
 #endif

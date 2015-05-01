@@ -89,9 +89,12 @@ void vector_test(){
 	//copy to a second vec
 	vec<int> vec_copy = fixedvec;
 	//pop values off
+	
 	for (int i = 0; i < 5; i++) {
 		fixedvec.pop();
 	}
+	assert(fixedvec.size() == 5);
+	assert(vec_copy.size() == 10);
 	//assert values from copy
 	for (int i = 0; i < 10; i++) {
 		assert(vec_copy[i] == add_list[i]);
