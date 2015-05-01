@@ -12,10 +12,19 @@ SRC=src/threest_main.cpp src/interpreter.cpp src/threest_linux_builtins.cpp
 
 all: bin/threest
 
-test: bin/threest
+test: test_lib test_threest
+
+test_lib: bin/lib_test
 
 	#"------------------------------------"
-	#"		Performing Tests"
+	#"		Performing library Tests"
+	#"------------------------------------"
+	./bin/lib_test
+	
+test_threest: bin/threest
+
+	#"------------------------------------"
+	#"		Performing Threest Tests"
 	#"------------------------------------"
 	
 	#verify it starts
@@ -67,6 +76,8 @@ test: bin/threest
 	#"		Test SUCCESS"
 	#"------------------------------------"
 
+bin/lib_test: src/lib_test.cpp
+	$(CC) $(CFLAGS) -o bin/lib_test src/lib_test.cpp
 
 bin/threest: src/threest_main.cpp src/threest.h src/threest_builtins.cpp src/linked_list.h
 	$(CC) $(CFLAGS) -o $(OUTPUT) $(SRC)

@@ -2,6 +2,7 @@
 //#include <cstddef>
 //#include <cstdlib>
 //#include <cassert>
+#include <cstring>
 #ifdef __AVR_ARCH__
 #include <assert.h>
 //suck it
@@ -49,7 +50,7 @@ vec<T>::vec(T* list, int size) {
 	array = (T *) malloc(size * sizeof(T));
 	assert(array != NULL);
 	_size = size;
-	memcpy(array,list,size * sizeof(T));
+	memcpy(array,list,size * sizeof(T)); //TODO verify memcpy on arduino
 }
 
 template<typename T>
@@ -95,11 +96,20 @@ void vec<T>::clear() {
 	_size = 0;
 }
 
+/*
+ * get a copy of the current list of elements.
+ * will return null if there are no elements.
+ */
 template<typename T>
 T* vec<T>::list() {
+	if (_size == 0) {
+		//lets uhh, return null and pretend this didn't happen
+		return (T*) NULL;
+	}
+	
 	T* output_array = (T *) malloc(_size * sizeof(T));
 	assert(output_array != NULL);
-	memcpy(output_array,array,_size * sizeof(T));
+	memcpy(output_array,array,_size * sizeof(T)); //TODO verify memcpy on arduino
 	return output_array;
 }
 
