@@ -3,7 +3,36 @@
 
 linked_list<_word *> interpreter::global_dict;
 
-vector<crate> * interpreter::get_line() {
+interpreter::~interpreter() {
+	
+	//iterate over the local dictionary and free everything
+	while (local_dict.size() > 0) {
+		_word * tmp = local_dict.pop();
+		if (!tmp->builtin) {
+			free((void*)tmp->command); //TODO smart pointers
+			delete(tmp->crates);
+		}
+		free(tmp);
+	}
+	
+	//IMPROPER: SHOULD CHECK IF WE
+	//ARE THE ONLY REMAINING INTERPRETER
+	while (global_dict.size() > 0) {
+		_word * tmp = global_dict.pop();
+		if (!tmp->builtin) {
+			free((void*)tmp->command); //TODO smart pointers
+			delete(tmp->crates);
+		}
+		free(tmp);
+	}
+
+	//TODO
+	//if we are the last interpreter
+	//clean the global dictionary
+	
+}
+
+vec<crate> * interpreter::get_line() {
 	return current_line;
 }
 
@@ -198,7 +227,7 @@ void interpreter::run_word(crate item) {
 				//
 				
 				node<crate> * item = element->crates->get_top();
-				vector<crate> * next_line = new vector<crate>();
+				vec<crate> * next_line = new vec<crate>();
 				
 				//so the words appear in order, we have to flip the list arround
 				linked_list<crate> * tmp = new linked_list<crate>();
@@ -207,7 +236,7 @@ void interpreter::run_word(crate item) {
 					item = item->next;
 				} while (item != (node<crate> *) NULL);
 
-				//convert this to a vector
+				//convert this to a vec
 				//push current onto the return_lines stack
 				//set current_line to this line
 				//save the index
@@ -276,12 +305,12 @@ _word * interpreter::get_word(char * command) {
 
 void interpreter::parse_line(char * input) {
 	char * element = strtok(input," ");
-	current_line = new vector<crate>();
+	current_line = new vec<crate>();
 
 	//reset the status
 	bail_out = false;
 
-	//parse the whole line into a vector
+	//parse the whole line into a vec
 	//skip elements in ( ) 
 	bool comment = false;
 	while (element != NULL) {
