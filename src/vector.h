@@ -78,6 +78,7 @@ T vector<T>::pop() {
 	T tmp = array[_size-1];
 	newArray = (T *) realloc(array,--_size * sizeof(T));
 	assert(newArray != NULL); //failed to allocate memory
+	array = newArray;
 	return tmp;
 }
 

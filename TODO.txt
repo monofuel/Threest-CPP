@@ -1,9 +1,11 @@
 #not using std containers because we can't us them on the arduino
-impliment hashmap and vectors
+impliment hashmap
+
+write tests for vec, linked_list and hashmap
+
+possible bug with recursion? not sure if it's not working or not implimented.
 
 handle tabs as whitespace
-
-Threest function to load dictionary files
 
 switch to smart pointers for clean defining/undefining words
 
