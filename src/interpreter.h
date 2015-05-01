@@ -14,13 +14,15 @@ protected:
 	linked_list<int> stack;
 	linked_list<int> return_stack;
 	linked_list<_word *> local_dict;
-	vector<crate> * current_line;
-	linked_list<vector<crate>*> return_lines;
+	vec<crate> * current_line;
+	linked_list<vec<crate>*> return_lines;
 	int current_word;
 
 	bool bail_out = false;
 
 public:
+
+	virtual ~interpreter();
 
 	//TODO sort these
 	virtual void push(int var);
@@ -42,7 +44,7 @@ public:
 
 	virtual _word * get_word(char *);
 
-	virtual vector<crate> * get_line();
+	virtual vec<crate> * get_line();
 	virtual int get_current_word();
 	virtual void set_current_word(int);
 
