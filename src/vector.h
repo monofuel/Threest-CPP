@@ -2,7 +2,6 @@
 //#include <cstddef>
 //#include <cstdlib>
 //#include <cassert>
-#include <cstring>
 #ifdef __AVR_ARCH__
 #include <assert.h>
 //suck it
@@ -10,8 +9,9 @@
 #define NULL null
 #endif
 
-#else
+#else //if not on arduino
 #include <cassert>
+#include <cstring>
 
 #endif
 
@@ -28,38 +28,53 @@ protected:
 public:
 	vec();
 	vec(T*,int);
-	virtual ~vec();
+	vec(const vec<T>&);
+	~vec();
 	
-	virtual void push(T);
-	virtual T pop();
-	virtual void clear();
-	virtual int size();
-	virtual T* list();
-	virtual T operator[](int);
-	vec<T>& operator=(const vec<T>);
+	void push(T);
+	T pop();
+	void clear();
+	int size();
+	T* list();
+	T operator[](int);
+	
 };
 
+//instantiate a new vec without any elements
 template<typename T>
 vec<T>::vec() {
 	array = (T *) NULL;
 	_size = 0;
 }
 
+//instantiate a new vec with a given list and _size
 template<typename T>
 vec<T>::vec(T* list, int size) {
 	array = (T *) malloc(size * sizeof(T));
 	assert(array != NULL);
 	_size = size;
-	memcpy(array,list,size * sizeof(T)); //TODO verify memcpy on arduino
+	memcpy(array,list,size * sizeof(T));
 }
 
+//copy constructor
+template<typename T>
+vec<T>::vec( const vec<T> &other) {
+
+	array = (T *) malloc(other._size * sizeof(T));
+	assert(array != NULL);
+	memcpy(array,other.array,other._size * sizeof(T));
+	_size = other._size;
+}
+
+//destructor
 template<typename T>
 vec<T>::~vec() {
-	if (_size > 0 && array != NULL)
+	if (_size > 0)
 		free(array);
 	_size = 0;
 }
 
+//push a new element onto the end of the vec
 template<typename T>
 void vec<T>::push(T item) {
 	T* newArray = NULL;
@@ -73,23 +88,26 @@ void vec<T>::push(T item) {
 	array[_size - 1] = item;
 }
 
+//pop an element off the top of the vec
 template<typename T>
 T vec<T>::pop() {
 	T* newArray = NULL;
 	
 	T tmp = array[_size-1];
 	newArray = (T *) realloc(array,--_size * sizeof(T));
-	if (_size != 0) //if we don't expect it to be null
-		assert(newArray != NULL); //check if failed to allocate memory
+	if (_size > 0)
+		assert(newArray != NULL); //failed to allocate memory
 	array = newArray;
 	return tmp;
 }
 
+//get the _size of the vec
 template<typename T>
 int vec<T>::size() {
 	return _size;
 }
 
+//clear out the vec
 template<typename T>
 void vec<T>::clear() {
 	if (_size == 0) return;
@@ -97,40 +115,24 @@ void vec<T>::clear() {
 	_size = 0;
 }
 
-/*
- * get a copy of the current list of elements.
- * will return null if there are no elements.
- */
+//allocate a copy of the list and return a pointer to it
 template<typename T>
 T* vec<T>::list() {
-	if (_size == 0) {
-		//lets uhh, return null and pretend this didn't happen
-		return (T*) NULL;
-	}
-	
+	if (_size == 0)
+		return (T*) NULL; //if _size is 0, pretend this didn't happen
 	T* output_array = (T *) malloc(_size * sizeof(T));
 	assert(output_array != NULL);
-	memcpy(output_array,array,_size * sizeof(T)); //TODO verify memcpy on arduino
+	memcpy(output_array,array,_size * sizeof(T));
 	return output_array;
 }
 
+//fetch an element from the list
 template<typename T>
 T vec<T>::operator[](int index) {
 	assert(index < _size); //out of bounds error
 	
 	
 	return array[index];
-}
-
-template<typename T>
-vec<T>& vec<T>::operator=( const vec<T> other) {
-	//TODO not sure what happens if you assign = to an existing vec
-	//does it destruct the previous vec and run this, or
-	//does it just run this on the existing vec?
-	array = other.list(); //list returns a copy of the list to us
-	_size = other.size();
-	
-	return *this;
 }
 
 #endif
