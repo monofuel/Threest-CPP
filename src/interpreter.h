@@ -22,31 +22,31 @@ protected:
 
 public:
 
-	virtual ~interpreter();
+	~interpreter();
 
 	//TODO sort these
-	virtual void push(int var);
-	virtual void push_r(int var);
-	virtual int pop();
-	virtual int pop_r();
-	virtual int peek();
-	virtual int peek_r();
-    virtual void add_word(_word);
-	virtual void add_word(_word *);
+	void push(int var);
+	void push_r(int var);
+	int pop();
+	int pop_r();
+	int peek();
+	int peek_r();
+    void add_word(_word);
+	void add_word(_word *);
     void (*add_error)(const char *);
     void (*add_output)(const char *);
-	virtual void run_word(crate);
-	virtual void parse_line(char *);
+	void run_word(crate);
+	void parse_line(char *);
 
-	virtual linked_list<_word *> get_global_dict();
-    	virtual linked_list<_word *> get_local_dict();
+	linked_list<_word *> get_global_dict();
+    linked_list<_word *> get_local_dict();
 
 
-	virtual _word * get_word(char *);
+	_word * get_word(char *);
 
-	virtual vec<crate> * get_line();
-	virtual int get_current_word();
-	virtual void set_current_word(int);
+	vec<crate> * get_line();
+	int get_current_word();
+	void set_current_word(int);
 
 };
 

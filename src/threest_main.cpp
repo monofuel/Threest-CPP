@@ -118,6 +118,15 @@ void interpret(interpreter * myInter) {
 
     while (true) {
         getline(cin,line);
+        
+        //this is to shut everything down and clean up
+        //all memory properly. 
+        //this should be done via the builtin word, however
+        //that would be a pain to do cleanly.
+        if (line == "BYE") {
+            break;
+        }
+        
         buff = (char *) malloc(sizeof(char) * line.length() + 1);
         strcpy(buff,line.c_str());
         strtok(buff,"\n"); //!< destroy newline character
