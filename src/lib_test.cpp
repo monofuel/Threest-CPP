@@ -23,11 +23,68 @@ int main(int argc, char * argv[]) {
 }
 
 void hash_map_test(){
-	cout << "HASH_MAP TEST TODO\n";
+	cout << "HASH_MAP TEST TODO" << endl;
 }
 
 void linked_list_test(){
-	cout << "LINKED_LIST TEST TODO\n";
+
+	linked_list<int> testlist;
+	//basic tests on an empty list
+	
+	assert(testlist.size() == 0);
+	testlist.clear();
+	assert(testlist.size() == 0);
+	
+	//init checks
+	int fixed_list[5] = {1,2,3,4,5};
+	int size = 5;
+	for (int i = 0; i < size; i++) {
+		testlist.push(fixed_list[i]);
+	}
+	int * list_copy = testlist.list();
+	for (int i = 0; i < size; i++) {
+		assert(fixed_list[i] == list_copy[4-i]);
+	}
+	free(list_copy);
+	
+	//push and pop checks
+	int add_list[10];
+	//create a random list
+	for (int i = 0; i < 10; i++) {
+		add_list[i] = rand();
+	}
+	//pop a value off
+	assert(5 == testlist.pop());
+	//push random data
+	for (int i = 0; i < 10; i++) {
+		testlist.push(add_list[i]);
+	}
+	//assert 4 old values
+	for (int i = 10; i < 14; i++) {
+		//cout << i << ":" << testlist[i] << "," << fixed_list[13-i] << endl;
+		assert(testlist[i] == fixed_list[13 - i]);
+	}
+	//assert added values
+	for (int i = 0; i < 10; i++) {
+		assert(testlist[i] == add_list[9-i]);
+	}
+	
+	//copy to a second vec
+	linked_list<int> testlist_copy = testlist;
+	//pop values off
+	
+	for (int i = 0; i < 5; i++) {
+		testlist.pop();
+	}
+	assert(testlist.size() == 9);
+	assert(testlist_copy.size() == 14);
+	//assert values from copy
+	for (int i = 0; i < 9; i++) {
+		//cout << i << ":" << testlist_copy[i+5] << "," << testlist[i] << endl;
+		assert(testlist_copy[i+5] == testlist[i]);
+	}
+	
+	cout << "linked list test success!" << endl;
 }
 
 void vector_test(){
@@ -100,5 +157,5 @@ void vector_test(){
 		assert(vec_copy[i] == add_list[i]);
 	}
 	
-	cout << "vector test success!\n";
+	cout << "vector test success!" << endl;
 }
