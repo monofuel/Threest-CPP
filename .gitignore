@@ -1,3 +1,4 @@
 .*.swp
 
 bin/threest
+bin/lib_test
