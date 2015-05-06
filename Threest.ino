@@ -1,4 +1,4 @@
-sr/* -*- c++ -*- */
+/* -*- c++ -*- */
 #include <threest.h>
 #include <interpreter.h>
 #include <linked_list.h>
@@ -63,8 +63,7 @@ void loop() {
   int i = 0;
   while (true) {
     while (Serial.available() == 0) {
-      //internalInter.parse_line("LOOP");
-      //Serial.println("LOOP");
+      internalInter.parse_line("MAIN");
     }
     tmp = Serial.read();
     if (tmp == '\r') break;

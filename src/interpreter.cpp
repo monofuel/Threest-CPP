@@ -243,6 +243,11 @@ void interpreter::run_word(crate item) {
 				//iterate over sub-words
 				//
 				
+				//check if the word is blank
+				if (element->crates->size() == 0) {
+					break;
+				}
+				
 				//node<crate> * item = element->crates->get_top();
 				vec<crate> * next_line = new vec<crate>();
 				

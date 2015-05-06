@@ -50,7 +50,7 @@ void init_ardu_builtin(interpreter * myInter) {
 	myInter->add_word(tmp);
 
 	//loop stub for user to redefine
-	tmp.command = "LOOP";
+	tmp.command = "MAIN";
 	tmp.builtin = false;
 	tmp.crates = new linked_list<crate>();
 	myInter->add_word(tmp);
