@@ -85,7 +85,7 @@ int interpreter::peek() {
 		add_error("stack underflow\n");
 		return 0;
 	} 
-	return stack.get_top()->data;
+	return stack[0];
 }
 
 int interpreter::peek_r() {
@@ -93,7 +93,7 @@ int interpreter::peek_r() {
 		add_error("return stack underflow\n");
 		return 0;
 	} 
-	return return_stack.get_top()->data;
+	return return_stack[0];
 }
 
 void interpreter::add_word(_word item) {
@@ -107,36 +107,53 @@ void interpreter::add_word(_word item) {
 
 void interpreter::add_word(_word * item) {
 
-	//check if it will be global or not
 	if (item->command[0] == '#') {
-		//local
-		node<_word *> * current = local_dict.get_top();
-		while (current != NULL) {
-			if (strcmp(current->data->command,item->command) == 0) {
-				if (current->data->builtin) {
+		//local words that start with #
+
+		//iterate over all words in the dictionary
+		for (int i = 0; i < local_dict.size(); i++) {
+			_word * current = local_dict[i];
+			//check if the command already exists
+			if (strcmp(current->command,item->command) == 0) {
+				if (current->builtin) {
                     add_error("cannot redefine built-in words\n");
 					return;
 				}
-				//free(current->data.crates);
-				current->data = item;
+				//otherwise, redefine the word
+				//TODO cleanup the old word
+				//if no words refer to it
+				//delete(current.crates);
+				//delete(current);
+				
+				//assign the new definition
+				current->crates = item->crates;
+				
 			}
-			current = current->next;
 		}
+		//if it is not in the dictionary, then add it
 		local_dict.push(item);
 	} else {
-		//global
-		node<_word *> * current = global_dict.get_top();
-		while (current != NULL) {
-			if (strcmp(current->data->command,item->command) == 0) {
-				if (current->data->builtin) {
+		//global words that don't start with #
+		//iterate over all words in the dictionary
+		for (int i = 0; i < global_dict.size(); i++) {
+			_word * current = global_dict[i];
+			//check if the command already exists
+			if (strcmp(current->command,item->command) == 0) {
+				if (current->builtin) {
                     add_error("cannot redefine built-in words");
 					return;
 				}
-				//free(current->data.crates);
-				current->data = item;
+				//otherwise, redefine the word
+				//TODO cleanup the old word
+				//if no words refer to it
+				//delete(current.crates);
+				//delete(current);
+				
+				//assign the new word
+				current->crates = item->crates;
 
 			}
-			current = current->next;
+			
 		}
 		global_dict.push(item);
 	}
@@ -226,15 +243,21 @@ void interpreter::run_word(crate item) {
 				//iterate over sub-words
 				//
 				
-				node<crate> * item = element->crates->get_top();
+				//node<crate> * item = element->crates->get_top();
 				vec<crate> * next_line = new vec<crate>();
 				
+				//copy the words from element->creates to tmp
 				//so the words appear in order, we have to flip the list arround
 				linked_list<crate> * tmp = new linked_list<crate>();
-				do {
+				
+				/*do {
 					tmp->push(item->data);
 					item = item->next;
-				} while (item != (node<crate> *) NULL);
+				} while (item != (node<crate> *) NULL);*/
+				for (int i = 0; i < element->crates->size(); i++) {
+					tmp->push((*element->crates)[i]);
+				}
+				
 
 				//convert this to a vec
 				//push current onto the return_lines stack
@@ -279,21 +302,19 @@ void interpreter::run_word(crate item) {
 
 _word * interpreter::get_word(char * command) {
 
-	node<_word *> * current = global_dict.get_top();
-	while (current != NULL) {
-		_word * element = current->data;
-		if (strcmp(command,element->command) == 0) {
-			return current->data;
+	//iterate over all words in the dictionary
+	for (int i = 0; i < global_dict.size(); i++) {
+		_word * current = global_dict[i];
+		if (strcmp(command,current->command) == 0) {
+			return current;
 		}
-		current = current->next;
 	}
-	current = local_dict.get_top();
-	while (current != NULL) {
-		_word * element = current->data;
-		if (strcmp(command,element->command) == 0) {
-			return current->data;
+	//iterate over all words in the dictionary
+	for (int i = 0; i < local_dict.size(); i++) {
+		_word * current = local_dict[i];
+		if (strcmp(command,current->command) == 0) {
+			return current;
 		}
-		current = current->next;
 	}
 
 	add_error("could not find word in dictionary: ");
