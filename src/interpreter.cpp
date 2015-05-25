@@ -162,7 +162,7 @@ void interpreter::add_word(_word * item) {
 void interpreter::run_word(crate item) {
 	if (bail_out) return;
 
-	if (return_lines.size() > 20) {
+	if (return_lines.size() > 100) {
 		bail_out = true;
 		return;
 

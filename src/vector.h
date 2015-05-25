@@ -18,6 +18,11 @@
 #ifndef	vec_H
 #define vec_H
 
+#ifndef DEBUG
+#define DEBUG 0
+#endif
+
+
 template<typename T>
 class vec {
 
@@ -51,7 +56,7 @@ vec<T>::vec() {
 template<typename T>
 vec<T>::vec(T* list, int size) {
 	array = (T *) malloc(size * sizeof(T));
-	assert(array != NULL);
+	if (DEBUG) assert(array != NULL);
 	_size = size;
 	memcpy(array,list,size * sizeof(T));
 }
@@ -61,7 +66,7 @@ template<typename T>
 vec<T>::vec( const vec<T> &other) {
 
 	array = (T *) malloc(other._size * sizeof(T));
-	assert(array != NULL);
+	if (DEBUG) assert(array != NULL);
 	memcpy(array,other.array,other._size * sizeof(T));
 	_size = other._size;
 }
@@ -82,7 +87,7 @@ void vec<T>::push(T item) {
 	//on first element, array will be NULL
 	//check if we are initializing a new array, or creating a new one
 	newArray = (T *) realloc(array,++_size * sizeof(T));
-	assert(newArray != NULL); //failed to allocate memory
+	if (DEBUG) assert(newArray != NULL); //failed to allocate memory
 	array = newArray;
 
 	array[_size - 1] = item;
@@ -95,8 +100,10 @@ T vec<T>::pop() {
 	
 	T tmp = array[_size-1];
 	newArray = (T *) realloc(array,--_size * sizeof(T));
-	if (_size > 0)
-		assert(newArray != NULL); //failed to allocate memory
+	if (DEBUG) {
+		if (_size > 0)
+			assert(newArray != NULL); //failed to allocate memory
+	}
 	array = newArray;
 	return tmp;
 }
@@ -118,10 +125,12 @@ void vec<T>::clear() {
 //allocate a copy of the list and return a pointer to it
 template<typename T>
 T* vec<T>::list() {
-	if (_size == 0)
-		return (T*) NULL; //if _size is 0, pretend this didn't happen
+	if (DEBUG) {
+		if (_size == 0)
+			return (T*) NULL; //if _size is 0, pretend this didn't happen
+	}
 	T* output_array = (T *) malloc(_size * sizeof(T));
-	assert(output_array != NULL);
+	if (DEBUG) assert(output_array != NULL);
 	memcpy(output_array,array,_size * sizeof(T));
 	return output_array;
 }
@@ -129,7 +138,7 @@ T* vec<T>::list() {
 //fetch an element from the list
 template<typename T>
 T vec<T>::operator[](int index) {
-	assert(index < _size); //out of bounds error
+	if (DEBUG) assert(index < _size); //out of bounds error
 	
 	
 	return array[index];

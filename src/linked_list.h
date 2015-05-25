@@ -17,6 +17,10 @@
 #ifndef  LINKEDLIST_H
 #define  LINKEDLIST_H
 
+#ifndef DEBUG
+#define DEBUG 0
+#endif
+
 //linked list data structure
 //data,pointer to next
 template<class T>
@@ -81,8 +85,8 @@ linked_list<T>::linked_list(const linked_list<T> &other) {
 		//advance the list
 		other_current = other_current->next;
 		//make sure our current nodes are valid
-		assert(current != (node<T>*) NULL);
-		assert(other_current != (node<T>*) NULL);
+		if (DEBUG) assert(current != (node<T>*) NULL);
+		if (DEBUG) assert(other_current != (node<T>*) NULL);
 		
 		//allocate a new node
 		current->next = new node<T>;
@@ -177,7 +181,7 @@ T linked_list<T>::pop(){
 //fetch an element from the list
 template<typename T>
 T linked_list<T>::operator[](int index) {
-	assert(index < _size); //out of bounds error
+	if (DEBUG) assert(index < _size); //out of bounds error
 	
 	//check if the current index is the same as the last value fetched
 	if (last == index) {

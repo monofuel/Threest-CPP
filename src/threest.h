@@ -23,6 +23,8 @@
 #include <string.h>
 #include <assert.h>
 
+#define DEBUG 0
+
 using namespace std;
 
 //prototypes to make things work
