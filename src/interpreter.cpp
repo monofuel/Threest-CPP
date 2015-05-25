@@ -248,36 +248,11 @@ void interpreter::run_word(crate item) {
 					break;
 				}
 				
-				//node<crate> * item = element->crates->get_top();
-				vec<crate> * next_line = new vec<crate>();
 				
-				//copy the words from element->creates to tmp
-				//so the words appear in order, we have to flip the list arround
-				linked_list<crate> * tmp = new linked_list<crate>();
-				
-				/*do {
-					tmp->push(item->data);
-					item = item->next;
-				} while (item != (node<crate> *) NULL);*/
-				for (int i = 0; i < element->crates->size(); i++) {
-					tmp->push((*element->crates)[i]);
-				}
-				
-
-				//convert this to a vec
-				//push current onto the return_lines stack
-				//set current_line to this line
-				//save the index
-				//
-				//after executing the sub-word, 
-				//pop it back off and restore the index
-				while (tmp->size() != 0) {
-					next_line->push(tmp->pop());
-				}
 				int old_current_word = current_word;
 				current_word = 0;
 				return_lines.push(current_line);
-				current_line = next_line;
+				current_line = element->crates;
 
 				while (current_word < current_line->size()) {
 					run_word((*current_line)[current_word]);
@@ -286,9 +261,6 @@ void interpreter::run_word(crate item) {
 				//restore things
 				current_word = old_current_word;
 				current_line = return_lines.pop();
-
-                delete(tmp);
-                delete(next_line);
 
 			}
 			break;

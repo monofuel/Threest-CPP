@@ -2,3 +2,6 @@
 
 bin/threest
 bin/lib_test
+
+bin/*.exe
+*.exe.stackdump

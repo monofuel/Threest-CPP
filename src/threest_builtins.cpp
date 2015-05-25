@@ -13,7 +13,7 @@ void create_word(interpreter * myInter) {
 	strcpy(word_copy,cur_element.string_content);
 	my_word->command = word_copy;
 	my_word->builtin = false;
-	my_word->crates = new linked_list<crate>();
+	my_word->crates = new vec<crate>();
 
 	cur_element = list[++index];
 	while (strcmp(cur_element.string_content,";") != 0) {

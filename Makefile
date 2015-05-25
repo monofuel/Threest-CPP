@@ -3,9 +3,9 @@
 
 CC=g++
 CFLAGS=-pedantic -Wall -Werror -std=c++11
-CFLAGS+=-g #feel free to comment this out
-#CFLAGS+=-O2 #going for distance
-#CFLAGS+=-march=native #going for SPEEEEEED
+#CFLAGS+=-g #feel free to comment this out
+CFLAGS+=-O2 #going for distance
+CFLAGS+=-march=native #going for SPEEEEEED
 OUTPUT=bin/threest
 SRC=src/threest_main.cpp src/interpreter.cpp src/threest_linux_builtins.cpp
 

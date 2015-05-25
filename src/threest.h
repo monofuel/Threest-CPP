@@ -37,7 +37,7 @@ typedef struct {
 	bool builtin;
 	union {
 	void (*_word_func)(interpreter *);
-	linked_list<crate>* crates;
+	vec<crate>* crates;
 	};
 
 } _word;
