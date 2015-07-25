@@ -16,14 +16,13 @@
 #include <Arduino.h>
 #endif
 
+#define DEBUG false
 #include "linked_list.h"
 #include "vector.h"
 
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-
-#define DEBUG 0
 
 using namespace std;
 

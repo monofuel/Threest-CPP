@@ -19,7 +19,7 @@
 #define vec_H
 
 #ifndef DEBUG
-#define DEBUG 0
+#define DEBUG true
 #endif
 
 

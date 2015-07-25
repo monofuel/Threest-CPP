@@ -18,7 +18,7 @@
 #define  LINKEDLIST_H
 
 #ifndef DEBUG
-#define DEBUG 0
+#define DEBUG true
 #endif
 
 //linked list data structure

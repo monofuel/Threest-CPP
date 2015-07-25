@@ -160,12 +160,14 @@ void interpreter::add_word(_word * item) {
 }
 
 void interpreter::run_word(crate item) {
-	if (bail_out) return;
-
-	if (return_lines.size() > 100) {
-		bail_out = true;
-		return;
-
+	if (DEBUG) {
+		if (bail_out) return;
+	
+		if (return_lines.size() > 100) {
+			bail_out = true;
+			return;
+	
+		}
 	}
 
 	int index;
@@ -188,9 +190,11 @@ void interpreter::run_word(crate item) {
 			index++;
 
 			//crude limit so that i don't keep shooting myself in the foot
-			if (index >= 2000) {
-				add_error("Loop limit exceeded, gun foot shoot prevented\n");
-				break;
+			if (DEBUG) {
+				if (index >= 2000) {
+					add_error("Loop limit exceeded, gun foot shoot prevented\n");
+					break;
+				}
 			}
 
 			if (limit == index) {

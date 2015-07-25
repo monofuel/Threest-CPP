@@ -333,8 +333,34 @@ void divide(interpreter * myInter) {
 	}
 }
 
+void rot(interpreter * myInter) {
+	int var1 = myInter->pop();
+	int var2 = myInter->pop();
+	int var3 = myInter->pop();
+	myInter->push(var3);
+	myInter->push(var1);
+	myInter->push(var2);
+}
+
+void over(interpreter * myInter) {
+	int var1 = myInter->pop();
+	int var2 = myInter->peek();
+	myInter->push(var1);
+	myInter->push(var2);
+}
+
 void init_builtin(interpreter * myInter) {
 	_word tmp;
+
+    tmp.command = "ROT";
+    tmp.builtin = true;
+    tmp._word_func = &rot;
+    myInter->add_word(tmp);
+	
+	tmp.command = "OVER";
+    tmp.builtin = true;
+    tmp._word_func = &over;
+    myInter->add_word(tmp);
 
     tmp.command = "NL";
     tmp.builtin = true;
