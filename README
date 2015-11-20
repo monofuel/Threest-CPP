@@ -14,6 +14,11 @@ support full dynamic typing of ints, floats, strings, arrays, booleans, and JSON
 JSON objects can be treated like hashmaps, and should include ways to parse objects from strings, and output them to strings
 for interaction between processes or via the network.
 
+ARDUINO:
+The Threest.ino file will have to be placed in a folder named threest. the src folder can be imported as a library, however you have to remove a few files. These files are lib_test.cpp, threest_main.cpp, and threest_linux_builtins.cpp.
+
+I also use memoryfree to show how much remaining memory is free.
+https://github.com/mpflaga/Arduino-MemoryFree
 
 for the linux version:
 File IO
